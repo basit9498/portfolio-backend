@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import { authRoute } from './routes/auth.route';
 import * as dotenv from 'dotenv';
 import { dataBaseConnection } from './config/db.config';
@@ -12,6 +12,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(authRoute);
+
+// Error Middleware
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  res.json({ err });
+});
 
 dataBaseConnection(() => {
   app.listen(PORT, () => {
