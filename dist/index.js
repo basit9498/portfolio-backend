@@ -29,7 +29,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const auth_route_1 = require("./routes/auth.route");
 const dotenv = __importStar(require("dotenv"));
-const db_config_1 = require("./config/db.config");
 const body_parser_1 = __importDefault(require("body-parser"));
 dotenv.config();
 const app = (0, express_1.default)();
@@ -38,16 +37,20 @@ app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use(body_parser_1.default.json());
 app.use(auth_route_1.authRoute);
 app.get('/test', (req, res, next) => {
-    res.send('Testing API ');
+    res.send(`Testing API ${PORT}`);
 });
 // Error Middleware
 app.use((err, req, res, next) => {
     res.json({ err });
 });
-(0, db_config_1.dataBaseConnection)(() => {
-    app.listen(PORT, () => {
-        // eslint-disable-next-line no-console
-        console.log(`App listening on port http://localhost:${PORT}`);
-    });
+// dataBaseConnection(() => {
+//   app.listen(PORT, () => {
+//     // eslint-disable-next-line no-console
+//     console.log(`App listening on port http://localhost:${PORT}`);
+//   });
+// });
+app.listen(PORT, () => {
+    // eslint-disable-next-line no-console
+    console.log(`App listening on port http://localhost:${PORT}`);
 });
 //# sourceMappingURL=index.js.map

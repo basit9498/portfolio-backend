@@ -13,16 +13,20 @@ app.use(bodyParser.json());
 
 app.use(authRoute);
 app.get('/test', (req: Request, res: Response, next: NextFunction) => {
-  res.send('Testing API ');
+  res.send(`Testing API ${PORT}`);
 });
 // Error Middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.json({ err });
 });
 
-dataBaseConnection(() => {
-  app.listen(PORT, () => {
-    // eslint-disable-next-line no-console
-    console.log(`App listening on port http://localhost:${PORT}`);
-  });
+// dataBaseConnection(() => {
+//   app.listen(PORT, () => {
+//     // eslint-disable-next-line no-console
+//     console.log(`App listening on port http://localhost:${PORT}`);
+//   });
+// });
+app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
+  console.log(`App listening on port http://localhost:${PORT}`);
 });
