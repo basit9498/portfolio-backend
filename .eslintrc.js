@@ -17,8 +17,18 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
-    'comma-dangle': ['error', 'always-multiline'],
+    'comma-dangle': ['error', 'off'],
     semi: ['off', 'always'],
     'no-console': 'warn',
+    'no-use-before-define': [
+      'error',
+      {
+        functions: true,
+        classes: true,
+        variables: true,
+        allowNamedExports: false,
+      },
+    ],
+    'no-unused-vars': 'error',
   },
 };
