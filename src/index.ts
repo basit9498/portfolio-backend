@@ -1,8 +1,9 @@
 import express, { NextFunction, Request, Response } from 'express';
 import { authRoute } from './routes/auth.route';
 import * as dotenv from 'dotenv';
-import { dataBaseConnection } from './config/db.config';
 import bodyParser from 'body-parser';
+import connectToDatabase from './config/db.config';
+
 dotenv.config();
 
 const app = express();
@@ -26,7 +27,12 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 //     console.log(`App listening on port http://localhost:${PORT}`);
 //   });
 // });
-app.listen(PORT, () => {
-  // eslint-disable-next-line no-console
-  console.log(`App listening on port http://localhost:${PORT}`);
-});
+connectToDatabase()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`App listening on port http://localhost:${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error('Failed to connect to the database:', error);
+  });

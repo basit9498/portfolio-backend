@@ -30,6 +30,7 @@ const express_1 = __importDefault(require("express"));
 const auth_route_1 = require("./routes/auth.route");
 const dotenv = __importStar(require("dotenv"));
 const body_parser_1 = __importDefault(require("body-parser"));
+const db_config_1 = __importDefault(require("./config/db.config"));
 dotenv.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 5000;
@@ -49,8 +50,13 @@ app.use((err, req, res, next) => {
 //     console.log(`App listening on port http://localhost:${PORT}`);
 //   });
 // });
-app.listen(PORT, () => {
-    // eslint-disable-next-line no-console
-    console.log(`App listening on port http://localhost:${PORT}`);
+(0, db_config_1.default)()
+    .then(() => {
+    app.listen(PORT, () => {
+        console.log(`App listening on port http://localhost:${PORT}`);
+    });
+})
+    .catch((error) => {
+    console.error('Failed to connect to the database:', error);
 });
 //# sourceMappingURL=index.js.map
