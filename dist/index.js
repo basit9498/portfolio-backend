@@ -37,7 +37,7 @@ const PORT = process.env.PORT || 5000;
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use(body_parser_1.default.json());
 app.use(auth_route_1.authRoute);
-app.use((req, res, next) => {
+app.get('/test', (req, res, next) => {
     res.send('Testing API ');
 });
 // Error Middleware

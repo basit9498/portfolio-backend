@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(authRoute);
-app.use((req: Request, res: Response, next: NextFunction) => {
+app.get('/test', (req: Request, res: Response, next: NextFunction) => {
   res.send('Testing API ');
 });
 // Error Middleware
