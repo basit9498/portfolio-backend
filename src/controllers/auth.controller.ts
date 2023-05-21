@@ -54,7 +54,7 @@ export const loginController = async (
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email: email });
-    console.log('user', user);
+
     if (!user) {
       throw new Error('Invlaid E-Mail and Password');
     }

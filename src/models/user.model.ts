@@ -50,7 +50,6 @@ UserSchema.pre('save', async function (next) {
   if (this.isModified('password')) {
     try {
       const getHashPassword = await ecryptPassword(this.get('password'));
-      console.log('getHashPassword', getHashPassword);
       if (typeof getHashPassword === 'string') {
         this.set('password', getHashPassword);
       }
