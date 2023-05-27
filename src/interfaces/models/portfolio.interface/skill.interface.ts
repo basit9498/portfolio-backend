@@ -8,7 +8,7 @@ export interface SkillAttr {
 }
 
 export interface SkillDoc extends Document {
-  user_id: ObjectId;
+  user_id: Types.ObjectId;
   name: string;
   experience: string;
   visibility: boolean;

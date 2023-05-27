@@ -23,29 +23,40 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PortfolioSkillModel = void 0;
+exports.PortfolioExperienceModel = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const SkillSchema = new mongoose_1.Schema({
+const ExperienceSchema = new mongoose_1.Schema({
     name: {
         type: String,
         required: true,
     },
-    experience: {
+    role: {
         type: String,
+        required: true,
+    },
+    detail: {
+        type: String,
+        required: true,
+    },
+    from_data: {
+        type: Date,
+        required: true,
+    },
+    to_date: {
+        type: Date,
         required: true,
     },
     visibility: {
         type: Boolean,
         required: true,
-        default: true,
     },
     user_id: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: 'Portfolio',
     },
 });
-SkillSchema.statics.build = (skillAttr) => {
-    return new exports.PortfolioSkillModel(skillAttr);
+ExperienceSchema.statics.build = (experienceAttr) => {
+    return new exports.PortfolioExperienceModel(experienceAttr);
 };
-exports.PortfolioSkillModel = mongoose_1.default.model('Portfolio_Skills', SkillSchema);
-//# sourceMappingURL=skill.model.js.map
+exports.PortfolioExperienceModel = mongoose_1.default.model('Portfolio_Experience', ExperienceSchema);
+//# sourceMappingURL=experience.model.js.map

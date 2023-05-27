@@ -49,7 +49,8 @@ app.use((error, req, res, next) => {
         const { message, status_code } = error.serializer();
         res.status(status_code).json({ error: message });
     }
-    res.status(500).json({ error: 'Internal Server Error !!!' });
+    // res.status(500).json({ error: 'Internal Server Error !!!' });
+    res.status(400).json({ error: error.message });
 });
 app.use('*', (req, res, next) => {
     res.status(404).send('Not Found !!!!');
