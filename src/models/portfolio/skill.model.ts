@@ -20,7 +20,7 @@ const SkillSchema = new Schema<SkillDoc, SkillModel>({
     default: true,
   },
   user_id: {
-    type: Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Portfolio',
   },
 });

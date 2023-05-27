@@ -25,7 +25,8 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
     const { message, status_code } = error.serializer();
     res.status(status_code).json({ error: message });
   }
-  res.status(500).json({ error: 'Internal Server Error !!!' });
+  // res.status(500).json({ error: 'Internal Server Error !!!' });
+  res.status(400).json({ error: error.message });
 });
 
 app.use('*', (req: Request, res: Response, next: NextFunction) => {

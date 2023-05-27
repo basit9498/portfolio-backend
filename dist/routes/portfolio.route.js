@@ -30,6 +30,7 @@ exports.portfolioRoute = void 0;
 const express_1 = __importDefault(require("express"));
 const PortfolioInfo = __importStar(require("../controllers/portfolio/info.controller"));
 const Portfolio = __importStar(require("../controllers/portfolio/portfolio.controller"));
+const PortfolioSkill = __importStar(require("../controllers/portfolio/skill.controller"));
 const route = express_1.default.Router();
 exports.portfolioRoute = route;
 /**
@@ -52,4 +53,17 @@ route.delete('/portfolio/:id', Portfolio.deletePortfolio);
  */
 route.post('/portfolio/info', PortfolioInfo.createPortfolioInfo);
 route.put('/portfolio/info/:id', PortfolioInfo.updatePortfolioInfo);
+/**
+ * -----End-----
+ */
+// ----------------------------------------------------------------------------------
+/**
+ * -----Start-----
+ * Skills Controllers
+ * Create,Delete,update
+ * (Auth Required)
+ */
+route.post('/portfolio/skill', PortfolioSkill.createSkillPortfolio);
+route.delete('/portfolio/skill/:id', PortfolioSkill.deleteSkillPortfolio);
+route.put('/portfolio/skill/:id', PortfolioSkill.updateSkillPortfolio);
 //# sourceMappingURL=portfolio.route.js.map
