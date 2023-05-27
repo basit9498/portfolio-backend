@@ -3,6 +3,8 @@ import { authRoute } from './routes/auth.route';
 import * as dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import connectToDatabase from './config/db.config';
+import { portfolioRoute } from './routes/portfolio.route';
+import { CustomError } from './error/CustomError';
 
 dotenv.config();
 
@@ -13,12 +15,22 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(authRoute);
+app.use(portfolioRoute);
 app.get('/test', (req: Request, res: Response, next: NextFunction) => {
   res.send(`Testing API ${PORT}`);
 });
 // Error Middleware
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  res.json({ err });
+app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
+  if (error instanceof CustomError) {
+    const { message, status_code } = error.serializer();
+    res.status(status_code).json({ error: message });
+  }
+  // res.status(500).json({ error: 'Internal Server Error !!!' });
+  res.status(400).json({ error: error.message });
+});
+
+app.use('*', (req: Request, res: Response, next: NextFunction) => {
+  res.status(404).send('Not Found !!!!');
 });
 
 // dataBaseConnection(() => {
