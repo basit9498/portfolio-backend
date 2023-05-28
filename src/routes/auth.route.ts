@@ -3,6 +3,7 @@ import * as authController from '../controllers/auth.controller';
 import express from 'express';
 import { User } from '../models/user.model';
 import { isAuth } from '../middlewares/isAuth.middleare';
+import { validationMiddleware } from '../middlewares/validation.middleware';
 
 const route = express.Router();
 
@@ -52,6 +53,7 @@ route.post(
         return true;
       }),
   ],
+  validationMiddleware,
   authController.registerController
 );
 
@@ -81,6 +83,9 @@ route.post(
   ],
   authController.loginController
 );
+
+// Verfiy Account
+route.get('/auth/verify', authController.authVerifyAccountController);
 
 route.get('/auth/me', isAuth, authController.userDetailController);
 

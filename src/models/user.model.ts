@@ -20,10 +20,20 @@ const UserSchema = new Schema<UserDocment, UserModel>(
       type: String,
       required: true,
     },
+    verify_account: {
+      status: {
+        type: Boolean,
+        required: true,
+        default: false,
+      },
+      token: {
+        type: String,
+      },
+    },
     account_status: {
       type: Boolean,
       required: true,
-      default: true,
+      default: false,
     },
     role: {
       type: String,

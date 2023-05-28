@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deletePortfolio = exports.getAllPortfolios = void 0;
 const info_model_1 = require("../../models/portfolio/info.model");
-const CustomError_1 = require("../../error/CustomError");
+const bad_request_1 = require("../../error/bad-request");
 // Get All Portfolio
 const getAllPortfolios = async (req, res, next) => {
     try {
@@ -23,7 +23,7 @@ const deletePortfolio = async (req, res, next) => {
         const portfolio = await info_model_1.PortfolioInfo.findByIdAndDelete(id);
         if (!portfolio) {
             // throw new Error('Id not Founded !!!');
-            throw new CustomError_1.CustomError("'Id not Founded !!!'", 404);
+            throw new bad_request_1.BadRequest();
         }
         res.json({ message: 'deleted_portfoilio_info', data: portfolio });
     }
