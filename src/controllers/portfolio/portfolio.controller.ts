@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { PortfolioInfo } from '../../models/portfolio/info.model';
 import { CustomError } from '../../error/CustomError';
+import { BadRequest } from '../../error/bad-request';
 
 // Get All Portfolio
 export const getAllPortfolios = async (
@@ -29,7 +30,7 @@ export const deletePortfolio = async (
     const portfolio = await PortfolioInfo.findByIdAndDelete(id);
     if (!portfolio) {
       // throw new Error('Id not Founded !!!');
-      throw new CustomError("'Id not Founded !!!'", 404);
+      throw new BadRequest();
     }
     res.json({ message: 'deleted_portfoilio_info', data: portfolio });
   } catch (error) {

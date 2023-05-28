@@ -16,6 +16,10 @@ export interface UserDocment extends Document {
   password: string;
   account_status?: boolean;
   role?: string;
+  verify_account: {
+    status: boolean;
+    token?: string;
+  };
   // Add methods in future if need for apply a specfic user
 }
 

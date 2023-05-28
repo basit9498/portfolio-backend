@@ -19,26 +19,22 @@ app.use(portfolioRoute);
 app.get('/test', (req: Request, res: Response, next: NextFunction) => {
   res.send(`Testing API ${PORT}`);
 });
+
 // Error Middleware
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   if (error instanceof CustomError) {
-    const { message, status_code } = error.serializer();
-    res.status(status_code).json({ error: message });
+    return res
+      .status(error.status_code)
+      .json({ error: error.serializerError() });
   }
   // res.status(500).json({ error: 'Internal Server Error !!!' });
-  res.status(400).json({ error: error.message });
+  res.status(400).json({ error: error });
 });
 
 app.use('*', (req: Request, res: Response, next: NextFunction) => {
   res.status(404).send('Not Found !!!!');
 });
 
-// dataBaseConnection(() => {
-//   app.listen(PORT, () => {
-//     // eslint-disable-next-line no-console
-//     console.log(`App listening on port http://localhost:${PORT}`);
-//   });
-// });
 connectToDatabase()
   .then(() => {
     app.listen(PORT, () => {

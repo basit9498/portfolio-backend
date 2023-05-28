@@ -3,7 +3,7 @@ import { Document, Model, Types } from 'mongoose';
 export interface ServiceAttr {
   user_id: Types.ObjectId;
   name: string;
-  time_duration: Date;
+  time_duration: string;
   detail: string;
   features: string;
   technology?: { name: string; experience: string; visabilty: boolean }[];
@@ -12,7 +12,7 @@ export interface ServiceAttr {
 export interface ServiceDoc extends Document {
   user_id: Types.ObjectId;
   name: string;
-  time_duration: Date;
+  time_duration: string;
   detail: string;
   features: string;
   technology?: { name: string; experience: string; visabilty: boolean }[];

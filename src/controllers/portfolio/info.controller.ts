@@ -1,5 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { PortfolioInfo } from '../../models/portfolio/info.model';
+import { validationResult, Result } from 'express-validator';
+import { getErrorDetailMessage } from '../../helpers/getErrorDetails';
+import { RequestValidationError } from '../../error/ValidationError';
 
 // Create
 export const createPortfolioInfo = async (
@@ -7,9 +10,8 @@ export const createPortfolioInfo = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { name, email, contact, social_links } = req.body;
-  console.log('social_links', social_links);
   try {
+    const { name, email, contact, social_links } = req.body;
     const portfolio = await PortfolioInfo.build({
       name,
       email,
@@ -21,9 +23,7 @@ export const createPortfolioInfo = async (
 
     res.json({ message: 'created_portfoilio_info', data: portfolio });
   } catch (error) {
-    if (error instanceof Error) {
-      next(error.message);
-    }
+    next(error);
   }
 };
 

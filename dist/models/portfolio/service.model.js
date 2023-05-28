@@ -31,7 +31,7 @@ const ServiceSchema = new mongoose_1.Schema({
         required: true,
     },
     time_duration: {
-        type: Date,
+        type: String,
         required: true,
     },
     detail: {

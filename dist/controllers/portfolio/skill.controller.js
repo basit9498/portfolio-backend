@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateSkillPortfolio = exports.deleteSkillPortfolio = exports.createSkillPortfolio = void 0;
 const skill_model_1 = require("../../models/portfolio/skill.model");
 const responseSend_1 = require("../../helpers/responseSend");
-const CustomError_1 = require("../../error/CustomError");
+const bad_request_1 = require("../../error/bad-request");
 // Create
 const createSkillPortfolio = async (req, res, next) => {
     try {
@@ -15,7 +15,7 @@ const createSkillPortfolio = async (req, res, next) => {
             visibility,
         });
         if (!skill) {
-            throw new CustomError_1.CustomError('Skill not created', 400);
+            throw new bad_request_1.BadRequest();
         }
         await skill.save();
         (0, responseSend_1.sendResponse)(res, 201, responseSend_1.MessageStatus.Created, skill);
@@ -31,7 +31,7 @@ const deleteSkillPortfolio = async (req, res, next) => {
         const { id } = req.params;
         const skill = await skill_model_1.PortfolioSkillModel.findByIdAndDelete(id);
         if (!skill) {
-            throw new CustomError_1.CustomError('Invalid id !!!', 400);
+            throw new bad_request_1.BadRequest();
         }
         (0, responseSend_1.sendResponse)(res, 200, responseSend_1.MessageStatus.Delete, skill);
     }
@@ -53,7 +53,7 @@ const updateSkillPortfolio = async (req, res, next) => {
             returnOriginal: false,
         });
         if (!skill) {
-            throw new CustomError_1.CustomError('Invalid id !!!', 400);
+            throw new bad_request_1.BadRequest();
         }
         (0, responseSend_1.sendResponse)(res, 200, responseSend_1.MessageStatus.Updated, skill);
     }
