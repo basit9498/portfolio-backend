@@ -4,9 +4,8 @@ exports.updatePortfolioInfo = exports.createPortfolioInfo = void 0;
 const info_model_1 = require("../../models/portfolio/info.model");
 // Create
 const createPortfolioInfo = async (req, res, next) => {
-    const { name, email, contact, social_links } = req.body;
-    console.log('social_links', social_links);
     try {
+        const { name, email, contact, social_links } = req.body;
         const portfolio = await info_model_1.PortfolioInfo.build({
             name,
             email,
@@ -17,9 +16,7 @@ const createPortfolioInfo = async (req, res, next) => {
         res.json({ message: 'created_portfoilio_info', data: portfolio });
     }
     catch (error) {
-        if (error instanceof Error) {
-            next(error.message);
-        }
+        next(error);
     }
 };
 exports.createPortfolioInfo = createPortfolioInfo;

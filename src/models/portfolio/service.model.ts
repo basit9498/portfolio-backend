@@ -11,7 +11,7 @@ const ServiceSchema = new Schema<ServiceDoc, ServiceModel>({
     required: true,
   },
   time_duration: {
-    type: Date,
+    type: String,
     required: true,
   },
   detail: {

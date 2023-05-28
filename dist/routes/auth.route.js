@@ -32,6 +32,7 @@ const authController = __importStar(require("../controllers/auth.controller"));
 const express_1 = __importDefault(require("express"));
 const user_model_1 = require("../models/user.model");
 const isAuth_middleare_1 = require("../middlewares/isAuth.middleare");
+const validation_middleware_1 = require("../middlewares/validation.middleware");
 const route = express_1.default.Router();
 exports.authRoute = route;
 //Register
@@ -75,7 +76,7 @@ route.post('/auth/register', [
         }
         return true;
     }),
-], authController.registerController);
+], validation_middleware_1.validationMiddleware, authController.registerController);
 // Login
 route.post('/auth/login', [
     (0, express_validator_1.body)('email')
@@ -96,5 +97,7 @@ route.post('/auth/login', [
     })
         .withMessage('Password should be combination of one uppercase , one lower case, one special char, one digit and min 8'),
 ], authController.loginController);
+// Verfiy Account
+route.get('/auth/verify', authController.authVerifyAccountController);
 route.get('/auth/me', isAuth_middleare_1.isAuth, authController.userDetailController);
 //# sourceMappingURL=auth.route.js.map

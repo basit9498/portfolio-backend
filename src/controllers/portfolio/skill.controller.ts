@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { PortfolioSkillModel } from '../../models/portfolio/skill.model';
 import { MessageStatus, sendResponse } from '../../helpers/responseSend';
 import { CustomError } from '../../error/CustomError';
+import { BadRequest } from '../../error/bad-request';
 
 // Create
 export const createSkillPortfolio = async (
@@ -18,7 +19,7 @@ export const createSkillPortfolio = async (
       visibility,
     });
     if (!skill) {
-      throw new CustomError('Skill not created', 400);
+      throw new BadRequest();
     }
     await skill.save();
     sendResponse(res, 201, MessageStatus.Created, skill);
@@ -38,7 +39,7 @@ export const deleteSkillPortfolio = async (
     const skill = await PortfolioSkillModel.findByIdAndDelete(id);
 
     if (!skill) {
-      throw new CustomError('Invalid id !!!', 400);
+      throw new BadRequest();
     }
     sendResponse(res, 200, MessageStatus.Delete, skill);
   } catch (error) {
@@ -68,7 +69,7 @@ export const updateSkillPortfolio = async (
     );
 
     if (!skill) {
-      throw new CustomError('Invalid id !!!', 400);
+      throw new BadRequest();
     }
     sendResponse(res, 200, MessageStatus.Updated, skill);
   } catch (error) {
