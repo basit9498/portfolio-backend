@@ -35,6 +35,13 @@ const UserSchema = new Schema<UserDocment, UserModel>(
       required: true,
       default: false,
     },
+    login_status: [
+      {
+        token: {
+          type: String,
+        },
+      },
+    ],
     role: {
       type: String,
       required: true,

@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express';
+import cookieParser from 'cookie-parser';
 import { authRoute } from './routes/auth.route';
 import * as dotenv from 'dotenv';
 import bodyParser from 'body-parser';
@@ -11,6 +12,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 

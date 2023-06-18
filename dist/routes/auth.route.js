@@ -27,76 +27,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authRoute = void 0;
-const express_validator_1 = require("express-validator");
 const authController = __importStar(require("../controllers/auth.controller"));
 const express_1 = __importDefault(require("express"));
-const user_model_1 = require("../models/user.model");
 const isAuth_middleare_1 = require("../middlewares/isAuth.middleare");
 const validation_middleware_1 = require("../middlewares/validation.middleware");
+const user_validation_1 = require("../validations/user.validation");
 const route = express_1.default.Router();
 exports.authRoute = route;
 //Register
-route.post('/auth/register', [
-    (0, express_validator_1.body)('name')
-        .notEmpty()
-        .withMessage('Please Enter Name')
-        .bail()
-        .isLength({ min: 3, max: 30 })
-        .withMessage('Name Length Should be MIN:3 and MAX:30'),
-    (0, express_validator_1.body)('email')
-        .notEmpty()
-        .withMessage('Please Enter Email')
-        .bail()
-        .isEmail()
-        .bail()
-        .custom(async (value) => {
-        const checkingEmail = await user_model_1.User.findOne({ email: value });
-        if (checkingEmail) {
-            throw new Error('E-Mail is already in user!!!');
-        }
-        return true;
-    }),
-    (0, express_validator_1.body)('password')
-        .notEmpty()
-        .isStrongPassword({
-        minLength: 8,
-        minLowercase: 1,
-        minUppercase: 1,
-        minNumbers: 1,
-        minSymbols: 1,
-    })
-        .withMessage('Password should be combination of one uppercase , one lower case, one special char, one digit and min 8'),
-    (0, express_validator_1.body)('conform_password')
-        .notEmpty()
-        .withMessage('Please Enter Conform Password')
-        .bail()
-        .custom((value, { req }) => {
-        if (value !== req.body.password) {
-            throw new Error('Conform Password is Not Matched !!!');
-        }
-        return true;
-    }),
-], validation_middleware_1.validationMiddleware, authController.registerController);
+route.post('/auth/register', user_validation_1.authRegisterValidation, validation_middleware_1.validationMiddleware, authController.registerController);
 // Login
-route.post('/auth/login', [
-    (0, express_validator_1.body)('email')
-        .notEmpty()
-        .withMessage('Please enter E-Mail')
-        .bail()
-        .isEmail()
-        .withMessage('Please enter valid E-Mail')
-        .bail(),
-    (0, express_validator_1.body)('password')
-        .notEmpty()
-        .isStrongPassword({
-        minLength: 8,
-        minLowercase: 1,
-        minUppercase: 1,
-        minNumbers: 1,
-        minSymbols: 1,
-    })
-        .withMessage('Password should be combination of one uppercase , one lower case, one special char, one digit and min 8'),
-], authController.loginController);
+route.post('/auth/login', user_validation_1.authLoginValidation, validation_middleware_1.validationMiddleware, authController.loginController);
+// Logout
+route.get('/auth/logout', isAuth_middleare_1.isAuth, 
+// authLogoutValidation,
+// validationMiddleware,
+authController.logoutController);
+route.post('/auth/refresh-token', authController.refreshTokenController);
 // Verfiy Account
 route.get('/auth/verify', authController.authVerifyAccountController);
 route.get('/auth/me', isAuth_middleare_1.isAuth, authController.userDetailController);
