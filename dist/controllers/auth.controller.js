@@ -3,18 +3,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userDetailController = exports.authVerifyAccountController = exports.loginController = exports.registerController = void 0;
+exports.userDetailController = exports.authVerifyAccountController = exports.refreshTokenController = exports.logoutController = exports.loginController = exports.registerController = void 0;
 const user_model_1 = require("../models/user.model");
-const express_validator_1 = require("express-validator");
-const getErrorDetails_1 = require("../helpers/getErrorDetails");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const send_email_1 = require("../helpers/send-email");
 const bad_request_1 = require("../error/bad-request");
+const forbidden_error_1 = require("../error/forbidden-error");
 const registerController = async (req, res, next) => {
-    // Data Saving
-    const { name, email, password } = req.body;
     try {
+        // Data Saving
+        const { name, email, password } = req.body;
         const user = await user_model_1.User.build({ name, email, password });
         // generate verfication token
         // Create JWT Token
@@ -25,53 +24,99 @@ const registerController = async (req, res, next) => {
         user.verify_account.status = false;
         (0, send_email_1.sendMail)('Abdul Basit', 'anddeveloper.abdulbasit@gmail.com', getVerification_token);
         await user.save();
-        // const token = jwt.sign(
-        //   { id: user.id, email: user.email },
-        //   process.env.AUTH_TOKEN as string,
-        //   {
-        //     expiresIn: '5m',
-        //   }
-        // );
         res.json({ message: 'Please verify your Account' });
     }
     catch (error) {
-        if (error instanceof Error) {
-            next(error.message);
-        }
+        next(error);
     }
 };
 exports.registerController = registerController;
 const loginController = async (req, res, next) => {
-    // Validation
-    const result = (0, express_validator_1.validationResult)(req);
-    if (!result.isEmpty()) {
-        return next((0, getErrorDetails_1.getErrorDetailMessage)(result.array()));
-    }
     //  Match User
-    const { email, password } = req.body;
     try {
+        const { email, password } = req.body;
         const user = await user_model_1.User.findOne({ email: email });
         if (!user) {
-            throw new Error('Invlaid E-Mail and Password');
+            throw new bad_request_1.BadRequest('Invlaid E-Mail and Password');
         }
         // password matching
         const passwordMatch = await bcrypt_1.default.compare(password, user.password);
         if (!passwordMatch) {
-            throw new Error('Invlaid E-Mail and Password');
+            throw new bad_request_1.BadRequest('Invlaid E-Mail and Password');
+        }
+        // Check the Status
+        if (!user.verify_account.status) {
+            throw new forbidden_error_1.ForbiddenError();
         }
         // token
         const token = jsonwebtoken_1.default.sign({ id: user.id, email: user.email }, process.env.AUTH_TOKEN, {
-            expiresIn: '1day',
+            expiresIn: '1m',
+        });
+        // refresh token
+        const refresh_token = jsonwebtoken_1.default.sign({ id: user.id }, process.env.AUTH_REFRESH_TOKEN, { expiresIn: '2h' });
+        // save token in
+        user.login_status.push({ token: refresh_token });
+        await user.save();
+        // token set in cookies
+        res.cookie('refresh_token', refresh_token, {
+            maxAge: 2 * 60 * 60 * 1000,
+            httpOnly: true,
         });
         res.json({ user, token });
     }
     catch (error) {
-        if (error instanceof Error) {
-            next(error.message);
-        }
+        next(error);
     }
 };
 exports.loginController = loginController;
+const logoutController = async (req, res, next) => {
+    try {
+        const { refresh_token } = req.cookies;
+        if (!refresh_token) {
+            throw new bad_request_1.BadRequest('Please provide the token');
+        }
+        const user = await user_model_1.User.updateOne({ _id: req.user.id }, {
+            $pull: { login_status: { token: refresh_token } },
+        });
+        if (!user) {
+            throw new bad_request_1.BadRequest('Something is wrong please logout again !!!');
+        }
+        res.clearCookie('token');
+        res.status(200).json({
+            message: 'Logout successfully',
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+};
+exports.logoutController = logoutController;
+// Refresh Token
+const refreshTokenController = async (req, res, next) => {
+    try {
+        const { refresh_token } = req.cookies;
+        if (!refresh_token) {
+            throw new bad_request_1.BadRequest('Token is not founded!!!');
+        }
+        // Check refresh token expire
+        const decode_refresh_token = jsonwebtoken_1.default.verify(refresh_token, process.env.AUTH_REFRESH_TOKEN);
+        const user = await user_model_1.User.findById(decode_refresh_token.id);
+        if (!user) {
+            throw new bad_request_1.BadRequest();
+        }
+        // token
+        const token = jsonwebtoken_1.default.sign({ id: user.id, email: user.email }, process.env.AUTH_TOKEN, {
+            expiresIn: '1m',
+        });
+        res.status(200).json({
+            token,
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+};
+exports.refreshTokenController = refreshTokenController;
 // Verfit Account
 const authVerifyAccountController = async (req, res, next) => {
     try {

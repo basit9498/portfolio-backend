@@ -20,6 +20,7 @@ export interface UserDocment extends Document {
     status: boolean;
     token?: string;
   };
+  login_status: { token: string }[];
   // Add methods in future if need for apply a specfic user
 }
 

@@ -1,20 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
 import { User } from '../models/user.model';
-import { validationResult, Result } from 'express-validator';
-import { getErrorDetailMessage } from '../helpers/getErrorDetails';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { sendMail } from '../helpers/send-email';
 import { BadRequest } from '../error/bad-request';
+import { ForbiddenError } from '../error/forbidden-error';
+import { MessageStatus, sendResponse } from '../helpers/responseSend';
 
 export const registerController = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  // Data Saving
-  const { name, email, password } = req.body;
   try {
+    // Data Saving
+    const { name, email, password } = req.body;
     const user = await User.build({ name, email, password });
     // generate verfication token
 
@@ -37,19 +37,9 @@ export const registerController = async (
     );
     await user.save();
 
-    // const token = jwt.sign(
-    //   { id: user.id, email: user.email },
-    //   process.env.AUTH_TOKEN as string,
-    //   {
-    //     expiresIn: '5m',
-    //   }
-    // );
-
     res.json({ message: 'Please verify your Account' });
   } catch (error) {
-    if (error instanceof Error) {
-      next(error.message);
-    }
+    next(error);
   }
 };
 
@@ -58,27 +48,25 @@ export const loginController = async (
   res: Response,
   next: NextFunction
 ) => {
-  // Validation
-  const result: Result = validationResult(req);
-
-  if (!result.isEmpty()) {
-    return next(getErrorDetailMessage(result.array()));
-  }
-
   //  Match User
-  const { email, password } = req.body;
   try {
+    const { email, password } = req.body;
     const user = await User.findOne({ email: email });
 
     if (!user) {
-      throw new Error('Invlaid E-Mail and Password');
+      throw new BadRequest('Invlaid E-Mail and Password');
     }
 
     // password matching
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
-      throw new Error('Invlaid E-Mail and Password');
+      throw new BadRequest('Invlaid E-Mail and Password');
+    }
+
+    // Check the Status
+    if (!user.verify_account.status) {
+      throw new ForbiddenError();
     }
 
     // token
@@ -86,14 +74,100 @@ export const loginController = async (
       { id: user.id, email: user.email },
       process.env.AUTH_TOKEN as string,
       {
-        expiresIn: '1day',
+        expiresIn: '1m',
       }
     );
+    // refresh token
+    const refresh_token = jwt.sign(
+      { id: user.id },
+      process.env.AUTH_REFRESH_TOKEN as string,
+      { expiresIn: '2h' }
+    );
+
+    // save token in
+    user.login_status.push({ token: refresh_token });
+    await user.save();
+
+    // token set in cookies
+    res.cookie('refresh_token', refresh_token, {
+      maxAge: 2 * 60 * 60 * 1000,
+      httpOnly: true,
+    });
+
     res.json({ user, token });
   } catch (error) {
-    if (error instanceof Error) {
-      next(error.message);
+    next(error);
+  }
+};
+
+export const logoutController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { refresh_token } = req.cookies;
+    if (!refresh_token) {
+      throw new BadRequest('Please provide the token');
     }
+
+    const user = await User.updateOne(
+      { _id: req.user.id },
+      {
+        $pull: { login_status: { token: refresh_token } },
+      }
+    );
+
+    if (!user) {
+      throw new BadRequest('Something is wrong please logout again !!!');
+    }
+
+    res.clearCookie('token');
+    res.status(200).json({
+      message: 'Logout successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Refresh Token
+export const refreshTokenController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { refresh_token } = req.cookies;
+
+    if (!refresh_token) {
+      throw new BadRequest('Token is not founded!!!');
+    }
+
+    // Check refresh token expire
+    const decode_refresh_token = jwt.verify(
+      refresh_token,
+      process.env.AUTH_REFRESH_TOKEN as string
+    ) as JwtPayload;
+
+    const user = await User.findById(decode_refresh_token.id);
+
+    if (!user) {
+      throw new BadRequest();
+    }
+    // token
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
+      process.env.AUTH_TOKEN as string,
+      {
+        expiresIn: '1m',
+      }
+    );
+    res.status(200).json({
+      token,
+    });
+  } catch (error) {
+    next(error);
   }
 };
 
