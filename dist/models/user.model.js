@@ -54,6 +54,13 @@ const UserSchema = new mongoose_1.Schema({
         required: true,
         default: false,
     },
+    login_status: [
+        {
+            token: {
+                type: String,
+            },
+        },
+    ],
     role: {
         type: String,
         required: true,
