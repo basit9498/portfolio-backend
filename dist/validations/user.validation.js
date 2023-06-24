@@ -29,7 +29,7 @@ exports.authRegisterValidation = (0, express_validator_1.checkSchema)({
         {
             type: 'conform_password',
         },
-    ], all_validation_data_1.authValidationParameters),
+    ], all_validation_data_1.validationParameters),
 });
 exports.authLoginValidation = (0, express_validator_1.checkSchema)({
     ...(0, all_validation_data_1.getValidationParameters)([
@@ -39,7 +39,7 @@ exports.authLoginValidation = (0, express_validator_1.checkSchema)({
         {
             type: 'password',
         },
-    ], all_validation_data_1.authValidationParameters),
+    ], all_validation_data_1.validationParameters),
 });
 exports.authLogoutValidation = (0, express_validator_1.checkSchema)({
     id: {

@@ -2,7 +2,7 @@ import { checkSchema } from 'express-validator';
 import { User } from '../models/user.model';
 import {
   getValidationParameters,
-  authValidationParameters,
+  validationParameters,
 } from './all-validation-data';
 
 export const authRegisterValidation = checkSchema({
@@ -32,7 +32,7 @@ export const authRegisterValidation = checkSchema({
         type: 'conform_password',
       },
     ],
-    authValidationParameters
+    validationParameters
   ),
 });
 
@@ -46,7 +46,7 @@ export const authLoginValidation = checkSchema({
         type: 'password',
       },
     ],
-    authValidationParameters
+    validationParameters
   ),
 });
 
