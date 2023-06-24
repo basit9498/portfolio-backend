@@ -50,7 +50,7 @@ const loginController = async (req, res, next) => {
         }
         // token
         const token = jsonwebtoken_1.default.sign({ id: user.id, email: user.email }, process.env.AUTH_TOKEN, {
-            expiresIn: '1m',
+            expiresIn: '1h',
         });
         // refresh token
         const refresh_token = jsonwebtoken_1.default.sign({ id: user.id }, process.env.AUTH_REFRESH_TOKEN, { expiresIn: '2h' });
@@ -106,7 +106,7 @@ const refreshTokenController = async (req, res, next) => {
         }
         // token
         const token = jsonwebtoken_1.default.sign({ id: user.id, email: user.email }, process.env.AUTH_TOKEN, {
-            expiresIn: '1m',
+            expiresIn: '1h',
         });
         res.status(200).json({
             token,

@@ -8,7 +8,7 @@ export const sendResponse = (
   res: Response,
   status_code: number,
   message: MessageStatus,
-  data: any
+  data?: any
 ): Response => {
   return res.status(status_code).json({
     message: message,
