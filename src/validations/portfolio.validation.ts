@@ -1,11 +1,82 @@
 import { checkSchema } from 'express-validator';
+import {
+  validationParameters,
+  getValidationParameters,
+} from './all-validation-data';
 
-const checkPortfolioValidation = checkSchema({
-  name: {
-    notEmpty: true,
-    escape: true,
-    errorMessage: 'Enter Valid Name',
-  },
+export const portfolioCreateValidation = checkSchema({
+  ...getValidationParameters(
+    [
+      {
+        type: 'name',
+      },
+      {
+        type: 'email',
+      },
+      {
+        type: 'contact',
+      },
+    ],
+    validationParameters
+  ),
 });
 
-export default checkPortfolioValidation;
+export const portfolioSkillValidation = checkSchema({
+  ...getValidationParameters(
+    [
+      {
+        type: 'name',
+      },
+      {
+        type: 'experience',
+      },
+      {
+        type: 'user_id',
+      },
+    ],
+    validationParameters
+  ),
+});
+
+export const portfolioSocialLinkValidation = checkSchema({
+  ...getValidationParameters(
+    [
+      {
+        type: 'name',
+      },
+      {
+        type: 'link',
+      },
+      {
+        type: 'user_id',
+      },
+    ],
+    validationParameters
+  ),
+});
+
+export const portfolioExperiencesValidation = checkSchema({
+  ...getValidationParameters(
+    [
+      {
+        type: 'user_id',
+      },
+      {
+        type: 'name',
+      },
+      {
+        type: 'role',
+      },
+      {
+        type: 'detail',
+      },
+      {
+        type: 'from_data',
+      },
+      {
+        type: 'to_date',
+      },
+    ],
+    validationParameters
+  ),
+});

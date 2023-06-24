@@ -1,115 +1,64 @@
 import express from 'express';
-import * as PortfolioInfo from '../controllers/portfolio/info.controller';
-import * as Portfolio from '../controllers/portfolio/portfolio.controller';
-import * as PortfolioSkill from '../controllers/portfolio/skill.controller';
-import * as PortfolioService from '../controllers/portfolio/service.controller';
-import * as PortfolioProject from '../controllers/portfolio/project.controller';
-import * as PortfolioExperience from '../controllers/portfolio/experience.controller';
+import * as PortfolioController from '../controllers/portfolio.controller';
 import { isAuth } from '../middlewares/isAuth.middleare';
-import checkPortfolioValidation from '../validations/portfolio.validation';
 import { validationMiddleware } from '../middlewares/validation.middleware';
+import * as portfolioValidation from '../validations/portfolio.validation';
 
 const route = express.Router();
 
 /**
- * -----Start-----
- * Portfolio Controllers
- * Get,Delete
+ * Portfolio
+ * create
  * (Auth Required)
  */
-route.get('/portfolio', Portfolio.getAllPortfolios);
-route.delete('/portfolio/:id', Portfolio.deletePortfolio);
-
-/**
- * -----End-----
- */
-
+route.post(
+  '/portfolio',
+  isAuth,
+  portfolioValidation.portfolioCreateValidation,
+  validationMiddleware,
+  PortfolioController.createPortfolio
+);
 // ----------------------------------------------------------------------------------
+
 /**
- * -----Start-----
- * PortfolioInfo Controllers
+ * Portfolio Skill Controller
  * Create,Update
  * (Auth Required)
  */
 route.post(
-  '/portfolio/info',
-  checkPortfolioValidation,
+  '/portfolio/skill',
+  // isAuth,
+  portfolioValidation.portfolioSkillValidation,
   validationMiddleware,
-  PortfolioInfo.createPortfolioInfo
+  PortfolioController.createPortfolioSkill
 );
-route.put('/portfolio/info/:id', PortfolioInfo.updatePortfolioInfo);
-
-/**
- * -----End-----
- */
-
 // ----------------------------------------------------------------------------------
-/**
- * -----Start-----
- * Skills Controllers
- * Create,Delete,update
- * (Auth Required)
- */
-route.post('/portfolio/skill', PortfolioSkill.createSkillPortfolio);
-route.delete('/portfolio/skill/:id', PortfolioSkill.deleteSkillPortfolio);
-route.put('/portfolio/skill/:id', PortfolioSkill.updateSkillPortfolio);
 
 /**
- * -----End-----
- */
-
-// ----------------------------------------------------------------------------------
-/**
- * -----Start-----
- * Service Controllers
- * Create,Delete,update
- * (Auth Required)
- */
-route.post('/portfolio/service', PortfolioService.createPortfolioSerivce);
-route.delete('/portfolio/service/:id', PortfolioService.deletePortfolioSerivce);
-route.put('/portfolio/service/:id', PortfolioService.updatePortfolioSerivce);
-
-/**
- * -----End-----
- */
-
-// ----------------------------------------------------------------------------------
-/**
- * -----Start-----
- * Project Controllers
- * Create,Delete,update
- * (Auth Required)
- */
-route.post('/portfolio/project', PortfolioProject.createPortfolioProject);
-route.delete('/portfolio/project/:id', PortfolioProject.deletePortfolioProject);
-route.put('/portfolio/project/:id', PortfolioProject.updatePortfolioProject);
-
-/**
- * -----End-----
- */
-
-// ----------------------------------------------------------------------------------
-/**
- * -----Start-----
- * Experience Controllers
+ *  Portfolio Social Links Controller
  * Create,Delete,update
  * (Auth Required)
  */
 route.post(
-  '/portfolio/experience',
-  PortfolioExperience.createPortfolioExperience
+  '/portfolio/social-link',
+  // isAuth,
+  portfolioValidation.portfolioSocialLinkValidation,
+  validationMiddleware,
+  PortfolioController.createPortfolioSocialLink
 );
-route.delete(
-  '/portfolio/experience/:id',
-  PortfolioExperience.deletePortfolioExperience
-);
-route.put(
-  '/portfolio/experience/:id',
-  PortfolioExperience.updatePortfolioExperience
-);
+// ----------------------------------------------------------------------------------
 
 /**
- * -----End-----
+ *  Portfolio experiences Controller
+ * Create,Delete,update
+ * (Auth Required)
  */
-
+route.post(
+  '/portfolio/experiences',
+  // isAuth,
+  portfolioValidation.portfolioExperiencesValidation,
+  validationMiddleware,
+  PortfolioController.createPortfolioExperiences
+);
+// ----------------------------------------------------------------------------------
 export { route as portfolioRoute };

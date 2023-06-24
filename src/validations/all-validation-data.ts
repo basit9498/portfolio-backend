@@ -1,6 +1,7 @@
 import { checkSchema } from 'express-validator';
 import { User } from '../models/user.model';
 import { Request } from 'express';
+import { isDate } from 'util/types';
 
 // For All
 export const getValidationParameters = (
@@ -22,8 +23,7 @@ export const getValidationParameters = (
   return getData;
 };
 
-// Auth
-export const authValidationParameters = {
+export const validationParameters = {
   name: {
     notEmpty: {
       errorMessage: 'Please enter the name',
@@ -76,4 +76,82 @@ export const authValidationParameters = {
       },
     },
   },
+  contact: {
+    notEmpty: {
+      errorMessage: 'Please enter the contact!!!',
+    },
+  },
+  experience: {
+    notEmpty: {
+      errorMessage: 'Please enter the experience!!!',
+    },
+  },
+  link: {
+    notEmpty: {
+      errorMessage: 'Please enter the URL!!!',
+      bail: true,
+    },
+    isURL: {
+      errorMessage: 'Please enter a valid URL!!!',
+    },
+  },
+  user_id: {
+    notEmpty: {
+      errorMessage: 'Please enter the user_id!!!',
+      bail: true,
+    },
+    isMongoId: {
+      errorMessage: 'Invalid Id!!!',
+    },
+  },
+  role: {
+    notEmpty: {
+      errorMessage: 'Please enter the role!!!',
+      bail: true,
+    },
+  },
+  detail: {
+    notEmpty: {
+      errorMessage: 'Please enter the detail!!!',
+      bail: true,
+    },
+  },
+  from_data: {
+    in: ['body'],
+    notEmpty: {
+      errorMessage: 'Please enter the date!!!',
+      bail: true,
+    },
+    isDate: true,
+    errorMessage: 'Invalid date format',
+  },
+  to_date: {
+    in: ['body'],
+    notEmpty: {
+      errorMessage: 'Please enter the date!!!',
+      bail: true,
+    },
+    isDate: true,
+    errorMessage: 'Invalid date format',
+  },
 };
+
+const a = checkSchema({
+  to_date: {
+    in: ['body'],
+    notEmpty: {
+      errorMessage: 'Please enter the date!!!',
+      bail: true,
+    },
+    isDate: true,
+    errorMessage: 'Invalid date format',
+    // custom: {
+    //   options: (value) => {
+    //     if (!isDate(value)) {
+    //       throw new Error('Invalid Date');
+    //     }
+    //     return true;
+    //   },
+    // },
+  },
+});

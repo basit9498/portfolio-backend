@@ -28,86 +28,43 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.portfolioRoute = void 0;
 const express_1 = __importDefault(require("express"));
-const PortfolioInfo = __importStar(require("../controllers/portfolio/info.controller"));
-const Portfolio = __importStar(require("../controllers/portfolio/portfolio.controller"));
-const PortfolioSkill = __importStar(require("../controllers/portfolio/skill.controller"));
-const PortfolioService = __importStar(require("../controllers/portfolio/service.controller"));
-const PortfolioProject = __importStar(require("../controllers/portfolio/project.controller"));
-const PortfolioExperience = __importStar(require("../controllers/portfolio/experience.controller"));
-const portfolio_validation_1 = __importDefault(require("../validations/portfolio.validation"));
+const PortfolioController = __importStar(require("../controllers/portfolio.controller"));
+const isAuth_middleare_1 = require("../middlewares/isAuth.middleare");
 const validation_middleware_1 = require("../middlewares/validation.middleware");
+const portfolioValidation = __importStar(require("../validations/portfolio.validation"));
 const route = express_1.default.Router();
 exports.portfolioRoute = route;
 /**
- * -----Start-----
- * Portfolio Controllers
- * Get,Delete
+ * Portfolio
+ * create
  * (Auth Required)
  */
-route.get('/portfolio', Portfolio.getAllPortfolios);
-route.delete('/portfolio/:id', Portfolio.deletePortfolio);
-/**
- * -----End-----
- */
+route.post('/portfolio', isAuth_middleare_1.isAuth, portfolioValidation.portfolioCreateValidation, validation_middleware_1.validationMiddleware, PortfolioController.createPortfolio);
 // ----------------------------------------------------------------------------------
 /**
- * -----Start-----
- * PortfolioInfo Controllers
+ * Portfolio Skill Controller
  * Create,Update
  * (Auth Required)
  */
-route.post('/portfolio/info', portfolio_validation_1.default, validation_middleware_1.validationMiddleware, PortfolioInfo.createPortfolioInfo);
-route.put('/portfolio/info/:id', PortfolioInfo.updatePortfolioInfo);
-/**
- * -----End-----
- */
+route.post('/portfolio/skill', 
+// isAuth,
+portfolioValidation.portfolioSkillValidation, validation_middleware_1.validationMiddleware, PortfolioController.createPortfolioSkill);
 // ----------------------------------------------------------------------------------
 /**
- * -----Start-----
- * Skills Controllers
+ *  Portfolio Social Links Controller
  * Create,Delete,update
  * (Auth Required)
  */
-route.post('/portfolio/skill', PortfolioSkill.createSkillPortfolio);
-route.delete('/portfolio/skill/:id', PortfolioSkill.deleteSkillPortfolio);
-route.put('/portfolio/skill/:id', PortfolioSkill.updateSkillPortfolio);
-/**
- * -----End-----
- */
+route.post('/portfolio/social-link', 
+// isAuth,
+portfolioValidation.portfolioSocialLinkValidation, validation_middleware_1.validationMiddleware, PortfolioController.createPortfolioSocialLink);
 // ----------------------------------------------------------------------------------
 /**
- * -----Start-----
- * Service Controllers
+ *  Portfolio experiences Controller
  * Create,Delete,update
  * (Auth Required)
  */
-route.post('/portfolio/service', PortfolioService.createPortfolioSerivce);
-route.delete('/portfolio/service/:id', PortfolioService.deletePortfolioSerivce);
-route.put('/portfolio/service/:id', PortfolioService.updatePortfolioSerivce);
-/**
- * -----End-----
- */
-// ----------------------------------------------------------------------------------
-/**
- * -----Start-----
- * Project Controllers
- * Create,Delete,update
- * (Auth Required)
- */
-route.post('/portfolio/project', PortfolioProject.createPortfolioProject);
-route.delete('/portfolio/project/:id', PortfolioProject.deletePortfolioProject);
-route.put('/portfolio/project/:id', PortfolioProject.updatePortfolioProject);
-/**
- * -----End-----
- */
-// ----------------------------------------------------------------------------------
-/**
- * -----Start-----
- * Experience Controllers
- * Create,Delete,update
- * (Auth Required)
- */
-route.post('/portfolio/experience', PortfolioExperience.createPortfolioExperience);
-route.delete('/portfolio/experience/:id', PortfolioExperience.deletePortfolioExperience);
-route.put('/portfolio/experience/:id', PortfolioExperience.updatePortfolioExperience);
+route.post('/portfolio/experiences', 
+// isAuth,
+portfolioValidation.portfolioExperiencesValidation, validation_middleware_1.validationMiddleware, PortfolioController.createPortfolioExperiences);
 //# sourceMappingURL=portfolio.route.js.map

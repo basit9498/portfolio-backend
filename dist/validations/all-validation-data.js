@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authValidationParameters = exports.getValidationParameters = void 0;
+exports.validationParameters = exports.getValidationParameters = void 0;
+const express_validator_1 = require("express-validator");
 // For All
 const getValidationParameters = (getParams, paramsList) => {
     // v1
@@ -19,8 +20,7 @@ const getValidationParameters = (getParams, paramsList) => {
     return getData;
 };
 exports.getValidationParameters = getValidationParameters;
-// Auth
-exports.authValidationParameters = {
+exports.validationParameters = {
     name: {
         notEmpty: {
             errorMessage: 'Please enter the name',
@@ -72,5 +72,82 @@ exports.authValidationParameters = {
             },
         },
     },
+    contact: {
+        notEmpty: {
+            errorMessage: 'Please enter the contact!!!',
+        },
+    },
+    experience: {
+        notEmpty: {
+            errorMessage: 'Please enter the experience!!!',
+        },
+    },
+    link: {
+        notEmpty: {
+            errorMessage: 'Please enter the URL!!!',
+            bail: true,
+        },
+        isURL: {
+            errorMessage: 'Please enter a valid URL!!!',
+        },
+    },
+    user_id: {
+        notEmpty: {
+            errorMessage: 'Please enter the user_id!!!',
+            bail: true,
+        },
+        isMongoId: {
+            errorMessage: 'Invalid Id!!!',
+        },
+    },
+    role: {
+        notEmpty: {
+            errorMessage: 'Please enter the role!!!',
+            bail: true,
+        },
+    },
+    detail: {
+        notEmpty: {
+            errorMessage: 'Please enter the detail!!!',
+            bail: true,
+        },
+    },
+    from_data: {
+        in: ['body'],
+        notEmpty: {
+            errorMessage: 'Please enter the date!!!',
+            bail: true,
+        },
+        isDate: true,
+        errorMessage: 'Invalid date format',
+    },
+    to_date: {
+        in: ['body'],
+        notEmpty: {
+            errorMessage: 'Please enter the date!!!',
+            bail: true,
+        },
+        isDate: true,
+        errorMessage: 'Invalid date format',
+    },
 };
+const a = (0, express_validator_1.checkSchema)({
+    to_date: {
+        in: ['body'],
+        notEmpty: {
+            errorMessage: 'Please enter the date!!!',
+            bail: true,
+        },
+        isDate: true,
+        errorMessage: 'Invalid date format',
+        // custom: {
+        //   options: (value) => {
+        //     if (!isDate(value)) {
+        //       throw new Error('Invalid Date');
+        //     }
+        //     return true;
+        //   },
+        // },
+    },
+});
 //# sourceMappingURL=all-validation-data.js.map
