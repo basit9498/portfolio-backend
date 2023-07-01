@@ -127,10 +127,12 @@ const ServiceSchema = new mongoose_1.Schema({
         type: String,
         required: true,
     },
-    features: {
-        type: String,
-        required: true,
-    },
+    features: [
+        {
+            type: String,
+            required: true,
+        },
+    ],
     technology: [
         {
             name: {

@@ -7,7 +7,7 @@ import {
   Skills,
   SocialLinks,
 } from '../interfaces/models/portfolio.model.interface';
-import mongoose, { HydratedDocument, Model, Schema, Types } from 'mongoose';
+import mongoose, { HydratedDocument, Model, Schema } from 'mongoose';
 
 // Methods
 interface IPortfolioMethods {}
@@ -124,10 +124,12 @@ const ServiceSchema = new Schema<Services>({
     type: String,
     required: true,
   },
-  features: {
-    type: String,
-    required: true,
-  },
+  features: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
   technology: [
     {
       name: {

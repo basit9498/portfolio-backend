@@ -31,14 +31,14 @@ export interface Services {
   name: string;
   time_duration: string;
   detail: string;
-  features: string;
+  features: string[];
   technology?: { name: string; experience: string; visabilty: boolean }[];
   visibility: boolean;
 }
 
 //********************************************************************************** */
 
-export interface IPortfolio {
+export interface IPortfolio extends Document {
   name: string;
   email: string;
   contact: string;
