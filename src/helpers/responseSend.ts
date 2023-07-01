@@ -3,6 +3,8 @@ export enum MessageStatus {
   Created = 'created',
   Updated = 'updated',
   Delete = 'delete',
+  Read = 'read',
+  DataNotFounded = 'Data not founded',
 }
 export const sendResponse = (
   res: Response,

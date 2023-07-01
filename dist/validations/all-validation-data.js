@@ -112,6 +112,26 @@ exports.validationParameters = {
             bail: true,
         },
     },
+    time_duration: {
+        notEmpty: {
+            errorMessage: 'Please enter the time_duration!!!',
+            bail: true,
+        },
+    },
+    features: {
+        notEmpty: {
+            errorMessage: 'Please enter the features!!!',
+            bail: true,
+        },
+        custom: {
+            options: (value) => {
+                if (!Array.isArray(value)) {
+                    throw new Error('Data is not in Array Format');
+                }
+                return true;
+            },
+        },
+    },
     from_data: {
         in: ['body'],
         notEmpty: {
@@ -130,24 +150,64 @@ exports.validationParameters = {
         isDate: true,
         errorMessage: 'Invalid date format',
     },
-};
-const a = (0, express_validator_1.checkSchema)({
-    to_date: {
-        in: ['body'],
+    type: {
         notEmpty: {
-            errorMessage: 'Please enter the date!!!',
+            errorMessage: 'Please enter the type!!!',
             bail: true,
         },
-        isDate: true,
-        errorMessage: 'Invalid date format',
-        // custom: {
-        //   options: (value) => {
-        //     if (!isDate(value)) {
-        //       throw new Error('Invalid Date');
-        //     }
-        //     return true;
-        //   },
-        // },
+        custom: {
+            options: (value) => {
+                if (!Array.isArray(value)) {
+                    throw new Error('Data is not in Array Format');
+                }
+                return true;
+            },
+        },
+    },
+    platform: {
+        notEmpty: {
+            errorMessage: 'Please enter the platform!!!',
+            bail: true,
+        },
+        custom: {
+            options: (value) => {
+                if (!Array.isArray(value)) {
+                    throw new Error('Data is not in Array Format');
+                }
+                return true;
+            },
+        },
+    },
+    technology: {
+        in: ['body'],
+        notEmpty: {
+            errorMessage: 'Please enter the technology!!!',
+            bail: true,
+        },
+        isArray: true,
+        errorMessage: 'Invalid array format',
+    },
+    id: {
+        in: ['params'],
+        notEmpty: {
+            errorMessage: 'Id is not founded in requested api!!!',
+            bail: true,
+        },
+        isMongoId: {
+            errorMessage: 'Invalid Id!!!',
+        },
+    },
+};
+const a = (0, express_validator_1.checkSchema)({
+    id: {
+        in: ['params'],
+        notEmpty: {
+            errorMessage: 'Id is not founded in requested api!!!',
+            bail: true,
+        },
+        isMongoId: {
+            errorMessage: 'Invalid Id!!!',
+        },
     },
 });
 //# sourceMappingURL=all-validation-data.js.map

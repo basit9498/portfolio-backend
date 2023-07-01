@@ -13,16 +13,22 @@ const route = express.Router();
  */
 route.post(
   '/portfolio',
-  isAuth,
+  // isAuth,
   portfolioValidation.portfolioCreateValidation,
   validationMiddleware,
   PortfolioController.createPortfolio
 );
+route.get(
+  '/portfolio',
+  portfolioValidation.portfolioGetValidation,
+  validationMiddleware,
+  PortfolioController.getPortfolio
+);
 // ----------------------------------------------------------------------------------
 
 /**
- * Portfolio Skill Controller
- * Create,Update
+ * Portfolio Skill
+ * Create,Update, Delete
  * (Auth Required)
  */
 route.post(
@@ -32,10 +38,28 @@ route.post(
   validationMiddleware,
   PortfolioController.createPortfolioSkill
 );
+
+route.put(
+  '/portfolio/skill/:id',
+  // isAuth,
+  portfolioValidation.portfolioSkillValidation,
+  portfolioValidation.portfolioSkillUpdateValidation,
+  validationMiddleware,
+  PortfolioController.updatePortfolioSkill
+);
+
+route.delete(
+  '/portfolio/skill/:id',
+  // isAuth,
+  portfolioValidation.portfolioSkillDeleteValidation,
+  validationMiddleware,
+  PortfolioController.deletePortfolioSkill
+);
+
 // ----------------------------------------------------------------------------------
 
 /**
- *  Portfolio Social Links Controller
+ * Portfolio Social Links
  * Create,Delete,update
  * (Auth Required)
  */
@@ -49,16 +73,44 @@ route.post(
 // ----------------------------------------------------------------------------------
 
 /**
- *  Portfolio experiences Controller
+ *  Portfolio experiences
  * Create,Delete,update
  * (Auth Required)
  */
 route.post(
   '/portfolio/experiences',
   // isAuth,
-  portfolioValidation.portfolioExperiencesValidation,
+  portfolioValidation.portfolioExperienceValidation,
   validationMiddleware,
   PortfolioController.createPortfolioExperiences
+);
+// ----------------------------------------------------------------------------------
+
+/**
+ *  Portfolio projects
+ * Create,Delete,update
+ * (Auth Required)
+ */
+route.post(
+  '/portfolio/project',
+  // isAuth,
+  portfolioValidation.portfolioProjectValidation,
+  validationMiddleware,
+  PortfolioController.createPortfolioProject
+);
+// ----------------------------------------------------------------------------------
+
+/**
+ *  Portfolio services
+ * Create,Delete,update
+ * (Auth Required)
+ */
+route.post(
+  '/portfolio/service',
+  // isAuth,
+  portfolioValidation.portfolioServiceValidation,
+  validationMiddleware,
+  PortfolioController.createPortfolioService
 );
 // ----------------------------------------------------------------------------------
 export { route as portfolioRoute };
