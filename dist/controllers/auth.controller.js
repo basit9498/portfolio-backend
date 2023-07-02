@@ -117,7 +117,7 @@ const refreshTokenController = async (req, res, next) => {
     }
 };
 exports.refreshTokenController = refreshTokenController;
-// Verfit Account
+// Verify Account
 const authVerifyAccountController = async (req, res, next) => {
     try {
         const { token } = req.query;
@@ -140,6 +140,7 @@ const authVerifyAccountController = async (req, res, next) => {
         }
         user.verify_account.status = true;
         user.verify_account.token = '';
+        user.account_status = true;
         await user.save();
         res.status(200).json({
             message: 'Account verify',

@@ -171,7 +171,7 @@ export const refreshTokenController = async (
   }
 };
 
-// Verfit Account
+// Verify Account
 export const authVerifyAccountController = async (
   req: Request,
   res: Response,
@@ -203,6 +203,7 @@ export const authVerifyAccountController = async (
     }
     user.verify_account.status = true;
     user.verify_account.token = '';
+    user.account_status = true;
 
     await user.save();
 

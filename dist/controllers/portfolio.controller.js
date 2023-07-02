@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createPortfolioService = exports.createPortfolioProject = exports.createPortfolioExperiences = exports.deletePortfolioSocialLink = exports.updatePortfolioSocialLink = exports.createPortfolioSocialLink = exports.deletePortfolioSkill = exports.updatePortfolioSkill = exports.createPortfolioSkill = exports.getPortfolio = exports.createPortfolio = void 0;
+exports.createPortfolioService = exports.createPortfolioProject = exports.createPortfolioExperiences = exports.createPortfolioSocialLink = exports.deletePortfolioSkill = exports.updatePortfolioSkill = exports.createPortfolioSkill = exports.getPortfolio = exports.createPortfolio = void 0;
 const responseSend_1 = require("../helpers/responseSend");
 const portfolio_model_1 = require("../models/portfolio.model");
 const searchingQuery_1 = __importDefault(require("../utils/searchingQuery"));
@@ -161,51 +161,63 @@ const createPortfolioSocialLink = async (req, res, next) => {
     }
 };
 exports.createPortfolioSocialLink = createPortfolioSocialLink;
-const updatePortfolioSocialLink = async (req, res, next) => {
-    try {
-        const { user_id, name, link, visibility } = req.body;
-        const { id } = req.params;
-        const portfolio = await portfolio_model_1.PortfolioModelDB.updateOne({ _id: user_id, 'social_links._id': id }, {
-            $set: {
-                'social_links.$[elem].name': name,
-                'social_links.$[elem].link': link,
-                'social_links.$[elem].visibility': visibility,
-            },
-        }, {
-            arrayFilters: [{ 'elem._id': id }],
-            returnOriginal: false,
-        });
-        if (portfolio.modifiedCount === 0) {
-            throw new bad_request_1.BadRequest('Id not founded!!!');
-        }
-        (0, responseSend_1.sendResponse)(res, 200, responseSend_1.MessageStatus.Updated);
-    }
-    catch (error) {
-        next(error);
-    }
-};
-exports.updatePortfolioSocialLink = updatePortfolioSocialLink;
-const deletePortfolioSocialLink = async (req, res, next) => {
-    try {
-        const { user_id } = req.body;
-        const { id } = req.params;
-        const portfolio = await portfolio_model_1.PortfolioModelDB.updateOne({ _id: user_id }, {
-            $pull: {
-                social_links: { _id: id },
-            },
-        }, {
-            returnOriginal: false,
-        });
-        if (portfolio.modifiedCount === 0) {
-            throw new bad_request_1.BadRequest('Id not founded!!!');
-        }
-        (0, responseSend_1.sendResponse)(res, 200, responseSend_1.MessageStatus.Delete);
-    }
-    catch (error) {
-        next(error);
-    }
-};
-exports.deletePortfolioSocialLink = deletePortfolioSocialLink;
+// export const updatePortfolioSocialLink = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     const { user_id, name, link, visibility } = req.body;
+//     const { id } = req.params;
+//     const portfolio = await PortfolioModelDB.updateOne(
+//       { _id: user_id, 'social_links._id': id },
+//       {
+//         $set: {
+//           'social_links.$[elem].name': name,
+//           'social_links.$[elem].link': link,
+//           'social_links.$[elem].visibility': visibility,
+//         },
+//       },
+//       {
+//         arrayFilters: [{ 'elem._id': id }],
+//         returnOriginal: false,
+//       }
+//     );
+//     if (portfolio.modifiedCount === 0) {
+//       throw new BadRequest('Id not founded!!!');
+//     }
+//     sendResponse(res, 200, MessageStatus.Updated);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+// export const deletePortfolioSocialLink = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     const { user_id } = req.body;
+//     const { id } = req.params;
+//     const portfolio = await PortfolioModelDB.updateOne(
+//       { _id: user_id },
+//       {
+//         $pull: {
+//           social_links: { _id: id },
+//         },
+//       },
+//       {
+//         returnOriginal: false,
+//       }
+//     );
+//     if (portfolio.modifiedCount === 0) {
+//       throw new BadRequest('Id not founded!!!');
+//     }
+//     sendResponse(res, 200, MessageStatus.Delete);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 /**
  *Experiences Section
  */
