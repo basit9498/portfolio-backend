@@ -215,69 +215,69 @@ export const createPortfolioSocialLink = async (
   }
 };
 
-export const updatePortfolioSocialLink = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { user_id, name, link, visibility } = req.body;
-    const { id } = req.params;
+// export const updatePortfolioSocialLink = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     const { user_id, name, link, visibility } = req.body;
+//     const { id } = req.params;
 
-    const portfolio = await PortfolioModelDB.updateOne(
-      { _id: user_id, 'social_links._id': id },
-      {
-        $set: {
-          'social_links.$[elem].name': name,
-          'social_links.$[elem].link': link,
-          'social_links.$[elem].visibility': visibility,
-        },
-      },
-      {
-        arrayFilters: [{ 'elem._id': id }],
-        returnOriginal: false,
-      }
-    );
+//     const portfolio = await PortfolioModelDB.updateOne(
+//       { _id: user_id, 'social_links._id': id },
+//       {
+//         $set: {
+//           'social_links.$[elem].name': name,
+//           'social_links.$[elem].link': link,
+//           'social_links.$[elem].visibility': visibility,
+//         },
+//       },
+//       {
+//         arrayFilters: [{ 'elem._id': id }],
+//         returnOriginal: false,
+//       }
+//     );
 
-    if (portfolio.modifiedCount === 0) {
-      throw new BadRequest('Id not founded!!!');
-    }
-    sendResponse(res, 200, MessageStatus.Updated);
-  } catch (error) {
-    next(error);
-  }
-};
+//     if (portfolio.modifiedCount === 0) {
+//       throw new BadRequest('Id not founded!!!');
+//     }
+//     sendResponse(res, 200, MessageStatus.Updated);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
-export const deletePortfolioSocialLink = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { user_id } = req.body;
-    const { id } = req.params;
+// export const deletePortfolioSocialLink = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     const { user_id } = req.body;
+//     const { id } = req.params;
 
-    const portfolio = await PortfolioModelDB.updateOne(
-      { _id: user_id },
-      {
-        $pull: {
-          social_links: { _id: id },
-        },
-      },
-      {
-        returnOriginal: false,
-      }
-    );
+//     const portfolio = await PortfolioModelDB.updateOne(
+//       { _id: user_id },
+//       {
+//         $pull: {
+//           social_links: { _id: id },
+//         },
+//       },
+//       {
+//         returnOriginal: false,
+//       }
+//     );
 
-    if (portfolio.modifiedCount === 0) {
-      throw new BadRequest('Id not founded!!!');
-    }
+//     if (portfolio.modifiedCount === 0) {
+//       throw new BadRequest('Id not founded!!!');
+//     }
 
-    sendResponse(res, 200, MessageStatus.Delete);
-  } catch (error) {
-    next(error);
-  }
-};
+//     sendResponse(res, 200, MessageStatus.Delete);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 /**
  *Experiences Section
