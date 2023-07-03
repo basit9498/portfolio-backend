@@ -60,7 +60,7 @@ export const loginController = async (
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
-      throw new BadRequest('Invlaid E-Mail and Password');
+      throw new BadRequest('Invalid E-Mail and Password');
     }
 
     // Check the Status
@@ -95,6 +95,7 @@ export const loginController = async (
 
     res.json({ user, token });
   } catch (error) {
+    console.log('login:error:', error);
     next(error);
   }
 };
