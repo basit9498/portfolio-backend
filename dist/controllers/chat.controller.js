@@ -121,10 +121,10 @@ const chatRequestReject = async (req, res, next) => {
     }
 };
 exports.chatRequestReject = chatRequestReject;
-// friends list
+// users list
 const chatUserList = async (req, res, next) => {
     try {
-        const chatUser = await user_model_1.User.find();
+        const chatUser = await user_model_1.User.find({ _id: { $ne: req.user.id } });
         if (!chatUser.length) {
             return (0, responseSend_1.sendResponse)(res, 200, responseSend_1.MessageStatus.DataNotFounded);
         }
@@ -136,6 +136,7 @@ const chatUserList = async (req, res, next) => {
     }
 };
 exports.chatUserList = chatUserList;
+// friends list
 const chatFriendsList = async (req, res, next) => {
     try {
         const chat = await chat_room_model_1.ChatRoomModelDB.find({
