@@ -1,28 +1,51 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.messageAll = exports.messageSend = exports.chatFriendsList = exports.chatRequestAccept = exports.chatRequestedList = exports.chatUserRequest = exports.chatDelete = void 0;
+exports.messageAll = exports.messageSend = exports.chatFriendsList = exports.chatRequestReject = exports.chatRequestAccept = exports.chatRequestedList = exports.chatUserRequest = exports.chatLeaveRoom = void 0;
 const chat_room_model_1 = require("../models/chat/chat-room.model");
 const responseSend_1 = require("../helpers/responseSend");
 const message_model_1 = require("../models/chat/message.model");
 const bad_request_1 = require("../error/bad-request");
-// Chat Delete or Request Reject
-const chatDelete = async (req, res, next) => {
+const db_config_1 = __importDefault(require("../config/db.config"));
+/**
+ * Chat  Portion
+ */
+const chatLeaveRoom = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const chat = await chat_room_model_1.ChatRoomModelDB.deleteOne({
+        // transaction
+        // leave chatRoom
+        const connection = await (0, db_config_1.default)();
+        const session = await connection.startSession();
+        session.startTransaction();
+        const chatRoom = await chat_room_model_1.ChatRoomModelDB.deleteOne({
             _id: id,
             users: { $elemMatch: { user_id: req.user.id } },
-        });
-        if (chat.deletedCount === 0) {
+        }, { session });
+        if (chatRoom.deletedCount === 0) {
+            await session.abortTransaction();
             return (0, responseSend_1.sendResponse)(res, 200, responseSend_1.MessageStatus.DataNotFounded);
         }
+        // delete the messages as well
+        const chatMessage = await message_model_1.MessageModelDB.deleteMany({ chat_room_id: id }, { session });
+        if (chatMessage.deletedCount === 0) {
+            await session.abortTransaction();
+            return (0, responseSend_1.sendResponse)(res, 200, responseSend_1.MessageStatus.DataNotFounded);
+        }
+        await session.commitTransaction();
+        session.endSession();
         (0, responseSend_1.sendResponse)(res, 200, responseSend_1.MessageStatus.Delete);
     }
     catch (error) {
         next(error);
     }
 };
-exports.chatDelete = chatDelete;
+exports.chatLeaveRoom = chatLeaveRoom;
+/**
+ * Request Portion
+ */
 // Request
 const chatUserRequest = async (req, res, next) => {
     try {
@@ -79,6 +102,24 @@ const chatRequestAccept = async (req, res, next) => {
     }
 };
 exports.chatRequestAccept = chatRequestAccept;
+//Request Reject
+const chatRequestReject = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const chat = await chat_room_model_1.ChatRoomModelDB.deleteOne({
+            _id: id,
+            users: { $elemMatch: { user_id: req.user.id } },
+        });
+        if (chat.deletedCount === 0) {
+            return (0, responseSend_1.sendResponse)(res, 200, responseSend_1.MessageStatus.DataNotFounded);
+        }
+        (0, responseSend_1.sendResponse)(res, 200, responseSend_1.MessageStatus.Delete);
+    }
+    catch (error) {
+        next(error);
+    }
+};
+exports.chatRequestReject = chatRequestReject;
 // friends list
 const chatFriendsList = async (req, res, next) => {
     try {

@@ -3,31 +3,58 @@ import { ChatRoomModelDB } from '../models/chat/chat-room.model';
 import { MessageStatus, sendResponse } from '../helpers/responseSend';
 import { MessageModelDB } from '../models/chat/message.model';
 import { BadRequest } from '../error/bad-request';
+import connectToDatabase from '../config/db.config';
 
-// Chat Delete or Request Reject
-export const chatDelete = async (
+/**
+ * Chat  Portion
+ */
+export const chatLeaveRoom = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const { id } = req.params;
+    // transaction
+    // leave chatRoom
+    const connection = await connectToDatabase();
+    const session = await connection.startSession();
 
-    const chat = await ChatRoomModelDB.deleteOne({
-      _id: id,
-      users: { $elemMatch: { user_id: req.user.id } },
-    });
+    session.startTransaction();
 
-    if (chat.deletedCount === 0) {
+    const chatRoom = await ChatRoomModelDB.deleteOne(
+      {
+        _id: id,
+        users: { $elemMatch: { user_id: req.user.id } },
+      },
+      { session }
+    );
+
+    if (chatRoom.deletedCount === 0) {
+      await session.abortTransaction();
       return sendResponse(res, 200, MessageStatus.DataNotFounded);
     }
 
+    // delete the messages as well
+    const chatMessage = await MessageModelDB.deleteMany(
+      { chat_room_id: id },
+      { session }
+    );
+
+    if (chatMessage.deletedCount === 0) {
+      await session.abortTransaction();
+      return sendResponse(res, 200, MessageStatus.DataNotFounded);
+    }
+    await session.commitTransaction();
+    session.endSession();
     sendResponse(res, 200, MessageStatus.Delete);
   } catch (error) {
     next(error);
   }
 };
-
+/**
+ * Request Portion
+ */
 // Request
 export const chatUserRequest = async (
   req: Request,
@@ -97,6 +124,30 @@ export const chatRequestAccept = async (
     }
 
     sendResponse(res, 200, MessageStatus.Updated);
+  } catch (error) {
+    next(error);
+  }
+};
+
+//Request Reject
+export const chatRequestReject = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+
+    const chat = await ChatRoomModelDB.deleteOne({
+      _id: id,
+      users: { $elemMatch: { user_id: req.user.id } },
+    });
+
+    if (chat.deletedCount === 0) {
+      return sendResponse(res, 200, MessageStatus.DataNotFounded);
+    }
+
+    sendResponse(res, 200, MessageStatus.Delete);
   } catch (error) {
     next(error);
   }

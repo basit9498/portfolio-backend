@@ -38,11 +38,12 @@ exports.ChatRoute = route;
 route.post('/chat/request', isAuth_middleare_1.isAuth, ChatController.chatUserRequest);
 route.get('/chat/request', isAuth_middleare_1.isAuth, ChatController.chatRequestedList);
 route.put('/chat/request/:id', isAuth_middleare_1.isAuth, ChatController.chatRequestAccept);
+route.delete('/chat/request/:id', isAuth_middleare_1.isAuth, ChatController.chatRequestReject);
 /**
  * Chat Related
  */
-// chat delete or reject the request
-route.delete('/chat/:id', isAuth_middleare_1.isAuth, ChatController.chatDelete);
+// Remove from Group or One to One Chat or unfriend
+route.delete('/chat/room/:id', isAuth_middleare_1.isAuth, ChatController.chatLeaveRoom);
 /**
  * Friend Related
  */
