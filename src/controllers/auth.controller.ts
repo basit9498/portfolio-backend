@@ -5,7 +5,6 @@ import bcrypt from 'bcrypt';
 import { sendMail } from '../helpers/send-email';
 import { BadRequest } from '../error/bad-request';
 import { ForbiddenError } from '../error/forbidden-error';
-import { MessageStatus, sendResponse } from '../helpers/responseSend';
 
 export const registerController = async (
   req: Request,

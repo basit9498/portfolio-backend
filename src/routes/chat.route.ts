@@ -21,7 +21,9 @@ route.delete('/chat/room/:id', isAuth, ChatController.chatLeaveRoom);
 /**
  * Friend Related
  */
+
 route.get('/chat/friend', isAuth, ChatController.chatFriendsList);
+route.get('/chat/user', isAuth, ChatController.chatUserList);
 
 /**
  * Message Related

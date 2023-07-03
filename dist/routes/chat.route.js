@@ -48,6 +48,7 @@ route.delete('/chat/room/:id', isAuth_middleare_1.isAuth, ChatController.chatLea
  * Friend Related
  */
 route.get('/chat/friend', isAuth_middleare_1.isAuth, ChatController.chatFriendsList);
+route.get('/chat/user', isAuth_middleare_1.isAuth, ChatController.chatUserList);
 /**
  * Message Related
  */
