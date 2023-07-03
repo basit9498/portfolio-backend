@@ -37,7 +37,7 @@ const loginController = async (req, res, next) => {
         const { email, password } = req.body;
         const user = await user_model_1.User.findOne({ email: email });
         if (!user) {
-            throw new bad_request_1.BadRequest('Invlaid E-Mail and Password');
+            throw new bad_request_1.BadRequest('Invalid E-Mail and Password');
         }
         // password matching
         const passwordMatch = await bcrypt_1.default.compare(password, user.password);
@@ -50,10 +50,10 @@ const loginController = async (req, res, next) => {
         }
         // token
         const token = jsonwebtoken_1.default.sign({ id: user.id, email: user.email }, process.env.AUTH_TOKEN, {
-            expiresIn: '1h',
+            expiresIn: process.env.AUTH_TOKEN_TIME,
         });
         // refresh token
-        const refresh_token = jsonwebtoken_1.default.sign({ id: user.id }, process.env.AUTH_REFRESH_TOKEN, { expiresIn: '2h' });
+        const refresh_token = jsonwebtoken_1.default.sign({ id: user.id }, process.env.AUTH_REFRESH_TOKEN, { expiresIn: process.env.AUTH_REFRESH_TOKEN_TIME });
         // save token in
         user.login_status.push({ token: refresh_token });
         await user.save();
@@ -106,7 +106,7 @@ const refreshTokenController = async (req, res, next) => {
         }
         // token
         const token = jsonwebtoken_1.default.sign({ id: user.id, email: user.email }, process.env.AUTH_TOKEN, {
-            expiresIn: '1h',
+            expiresIn: process.env.AUTH_TOKEN_TIME,
         });
         res.status(200).json({
             token,
@@ -117,7 +117,7 @@ const refreshTokenController = async (req, res, next) => {
     }
 };
 exports.refreshTokenController = refreshTokenController;
-// Verfit Account
+// Verify Account
 const authVerifyAccountController = async (req, res, next) => {
     try {
         const { token } = req.query;
@@ -140,6 +140,7 @@ const authVerifyAccountController = async (req, res, next) => {
         }
         user.verify_account.status = true;
         user.verify_account.token = '';
+        user.account_status = true;
         await user.save();
         res.status(200).json({
             message: 'Account verify',

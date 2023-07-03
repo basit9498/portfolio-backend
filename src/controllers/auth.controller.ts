@@ -54,7 +54,7 @@ export const loginController = async (
     const user = await User.findOne({ email: email });
 
     if (!user) {
-      throw new BadRequest('Invlaid E-Mail and Password');
+      throw new BadRequest('Invalid E-Mail and Password');
     }
 
     // password matching
@@ -74,14 +74,14 @@ export const loginController = async (
       { id: user.id, email: user.email },
       process.env.AUTH_TOKEN as string,
       {
-        expiresIn: '1h',
+        expiresIn: process.env.AUTH_TOKEN_TIME,
       }
     );
     // refresh token
     const refresh_token = jwt.sign(
       { id: user.id },
       process.env.AUTH_REFRESH_TOKEN as string,
-      { expiresIn: '2h' }
+      { expiresIn: process.env.AUTH_REFRESH_TOKEN_TIME }
     );
 
     // save token in
@@ -160,7 +160,7 @@ export const refreshTokenController = async (
       { id: user.id, email: user.email },
       process.env.AUTH_TOKEN as string,
       {
-        expiresIn: '1h',
+        expiresIn: process.env.AUTH_TOKEN_TIME,
       }
     );
     res.status(200).json({
@@ -171,7 +171,7 @@ export const refreshTokenController = async (
   }
 };
 
-// Verfit Account
+// Verify Account
 export const authVerifyAccountController = async (
   req: Request,
   res: Response,
@@ -203,6 +203,7 @@ export const authVerifyAccountController = async (
     }
     user.verify_account.status = true;
     user.verify_account.token = '';
+    user.account_status = true;
 
     await user.save();
 

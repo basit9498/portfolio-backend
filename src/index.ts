@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import connectToDatabase from './config/db.config';
 import { portfolioRoute } from './routes/portfolio.route';
 import { CustomError } from './error/CustomError';
+import { ChatRoute } from './routes/chat.route';
 
 dotenv.config();
 
@@ -18,9 +19,7 @@ app.use(bodyParser.json());
 
 app.use(authRoute);
 app.use(portfolioRoute);
-app.get('/test', (req: Request, res: Response, next: NextFunction) => {
-  res.send(`Testing API ${PORT}`);
-});
+app.use(ChatRoute);
 
 // Error Middleware
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {

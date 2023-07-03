@@ -4,7 +4,9 @@ export enum MessageStatus {
   Updated = 'updated',
   Delete = 'delete',
   Read = 'read',
-  DataNotFounded = 'Data not founded',
+  DataNotFounded = 'Data not found !!!',
+  RequestNotFound = 'Request not found !!!',
+  MessageSend = 'Message Send',
 }
 export const sendResponse = (
   res: Response,
