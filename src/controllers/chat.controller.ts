@@ -155,14 +155,14 @@ export const chatRequestReject = async (
   }
 };
 
-// friends list
+// users list
 export const chatUserList = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const chatUser = await User.find();
+    const chatUser = await User.find({ _id: { $ne: req.user.id } });
     if (!chatUser.length) {
       return sendResponse(res, 200, MessageStatus.DataNotFounded);
     }
@@ -172,6 +172,7 @@ export const chatUserList = async (
     next(error);
   }
 };
+// friends list
 export const chatFriendsList = async (
   req: Request,
   res: Response,
