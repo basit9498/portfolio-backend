@@ -7,12 +7,14 @@ import connectToDatabase from './config/db.config';
 import { portfolioRoute } from './routes/portfolio.route';
 import { CustomError } from './error/CustomError';
 import { ChatRoute } from './routes/chat.route';
+import cors from 'cors';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.use(cors());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
