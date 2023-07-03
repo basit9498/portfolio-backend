@@ -3,12 +3,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.messageAll = exports.messageSend = exports.chatFriendsList = exports.chatRequestReject = exports.chatRequestAccept = exports.chatRequestedList = exports.chatUserRequest = exports.chatLeaveRoom = void 0;
+exports.messageAll = exports.messageSend = exports.chatFriendsList = exports.chatUserList = exports.chatRequestReject = exports.chatRequestAccept = exports.chatRequestedList = exports.chatUserRequest = exports.chatLeaveRoom = void 0;
 const chat_room_model_1 = require("../models/chat/chat-room.model");
 const responseSend_1 = require("../helpers/responseSend");
 const message_model_1 = require("../models/chat/message.model");
 const bad_request_1 = require("../error/bad-request");
 const db_config_1 = __importDefault(require("../config/db.config"));
+const user_model_1 = require("../models/user.model");
 /**
  * Chat  Portion
  */
@@ -121,6 +122,20 @@ const chatRequestReject = async (req, res, next) => {
 };
 exports.chatRequestReject = chatRequestReject;
 // friends list
+const chatUserList = async (req, res, next) => {
+    try {
+        const chatUser = await user_model_1.User.find();
+        if (!chatUser.length) {
+            return (0, responseSend_1.sendResponse)(res, 200, responseSend_1.MessageStatus.DataNotFounded);
+        }
+        (0, responseSend_1.sendResponse)(res, 200, responseSend_1.MessageStatus.Read, chatUser);
+    }
+    catch (error) {
+        console.log('error', error);
+        next(error);
+    }
+};
+exports.chatUserList = chatUserList;
 const chatFriendsList = async (req, res, next) => {
     try {
         const chat = await chat_room_model_1.ChatRoomModelDB.find({

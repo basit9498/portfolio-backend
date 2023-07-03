@@ -55,6 +55,8 @@ const UserSchema = new Schema<UserDocment, UserModel>(
         delete ret._id;
         delete ret.password;
         delete ret.__v;
+        delete ret.login_status;
+        delete ret.verify_account;
       },
     },
   }

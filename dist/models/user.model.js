@@ -73,6 +73,8 @@ const UserSchema = new mongoose_1.Schema({
             delete ret._id;
             delete ret.password;
             delete ret.__v;
+            delete ret.login_status;
+            delete ret.verify_account;
         },
     },
 });

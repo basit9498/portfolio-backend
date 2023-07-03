@@ -4,6 +4,7 @@ import { MessageStatus, sendResponse } from '../helpers/responseSend';
 import { MessageModelDB } from '../models/chat/message.model';
 import { BadRequest } from '../error/bad-request';
 import connectToDatabase from '../config/db.config';
+import { User } from '../models/user.model';
 
 /**
  * Chat  Portion
@@ -52,6 +53,7 @@ export const chatLeaveRoom = async (
     next(error);
   }
 };
+
 /**
  * Request Portion
  */
@@ -154,6 +156,22 @@ export const chatRequestReject = async (
 };
 
 // friends list
+export const chatUserList = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const chatUser = await User.find();
+    if (!chatUser.length) {
+      return sendResponse(res, 200, MessageStatus.DataNotFounded);
+    }
+    sendResponse(res, 200, MessageStatus.Read, chatUser);
+  } catch (error) {
+    console.log('error', error);
+    next(error);
+  }
+};
 export const chatFriendsList = async (
   req: Request,
   res: Response,
