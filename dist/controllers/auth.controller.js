@@ -42,7 +42,7 @@ const loginController = async (req, res, next) => {
         // password matching
         const passwordMatch = await bcrypt_1.default.compare(password, user.password);
         if (!passwordMatch) {
-            throw new bad_request_1.BadRequest('Invlaid E-Mail and Password');
+            throw new bad_request_1.BadRequest('Invalid E-Mail and Password');
         }
         // Check the Status
         if (!user.verify_account.status) {
@@ -65,6 +65,7 @@ const loginController = async (req, res, next) => {
         res.json({ user, token });
     }
     catch (error) {
+        console.log('login:error:', error);
         next(error);
     }
 };
