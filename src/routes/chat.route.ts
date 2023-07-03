@@ -10,12 +10,13 @@ const route = express.Router();
 route.post('/chat/request', isAuth, ChatController.chatUserRequest);
 route.get('/chat/request', isAuth, ChatController.chatRequestedList);
 route.put('/chat/request/:id', isAuth, ChatController.chatRequestAccept);
+route.delete('/chat/request/:id', isAuth, ChatController.chatRequestReject);
 
 /**
  * Chat Related
  */
-// chat delete or reject the request
-route.delete('/chat/:id', isAuth, ChatController.chatDelete);
+// Remove from Group or One to One Chat or unfriend
+route.delete('/chat/room/:id', isAuth, ChatController.chatLeaveRoom);
 
 /**
  * Friend Related
