@@ -26,6 +26,40 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const encryptPassword_1 = require("../helpers/encryptPassword");
 const mongoose_1 = __importStar(require("mongoose"));
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    CreateUserInput:
+ *        type: object
+ *        required:
+ *          - name
+ *          - email
+ *          - password
+ *          - conform_password
+ *        properties:
+ *            name:
+ *              type: string
+ *              default: Example Name
+ *            email:
+ *              type: string
+ *              default: example@test.com
+ *            password:
+ *              type: string
+ *              default: stringPassword@123
+ *            conform_password:
+ *              type: string
+ *              default: stringPassword@123
+ *    CreateUserResponse:
+ *        type: object
+ *        properties:
+ *            name:
+ *              type: string
+ *            email:
+ *              type: string
+ *            id:
+ *              type: string
+ */
 const UserSchema = new mongoose_1.Schema({
     name: {
         type: String,

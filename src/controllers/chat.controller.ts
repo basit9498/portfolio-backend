@@ -155,6 +155,9 @@ export const chatRequestReject = async (
   }
 };
 
+/**
+ * Friend Related Portion
+ */
 // users list
 export const chatUserList = async (
   req: Request,
@@ -162,11 +165,26 @@ export const chatUserList = async (
   next: NextFunction
 ) => {
   try {
-    const chatUser = await User.find({ _id: { $ne: req.user.id } });
+    const chatUser = await User.find({
+      _id: { $ne: req.user.id },
+      account_status: true,
+    });
+
     if (!chatUser.length) {
       return sendResponse(res, 200, MessageStatus.DataNotFounded);
     }
-    sendResponse(res, 200, MessageStatus.Read, chatUser);
+
+    const chatRoom = await ChatRoomModelDB.find();
+    // Query is not working
+    // requirement is when b
+    const userList = chatUser?.filter(
+      (cuf) =>
+        !chatRoom.some((crs) =>
+          crs.users.some((us) => us.user_id.toString() === cuf._id.toString())
+        )
+    );
+    console.log('chatRoom', userList);
+    sendResponse(res, 200, MessageStatus.Read, userList);
   } catch (error) {
     console.log('error', error);
     next(error);

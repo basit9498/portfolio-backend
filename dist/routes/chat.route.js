@@ -32,26 +32,26 @@ const ChatController = __importStar(require("../controllers/chat.controller"));
 const isAuth_middleare_1 = require("../middlewares/isAuth.middleare");
 const route = express_1.default.Router();
 exports.ChatRoute = route;
-/**
- * Chat Request Related
- */
+//Chat Request Related----
 route.post('/chat/request', isAuth_middleare_1.isAuth, ChatController.chatUserRequest);
+/**
+ * @swagger
+ * /chat/request:
+ *  get:
+ *      tags:
+ *          - Request List
+ *      summary: Get request list
+ */
 route.get('/chat/request', isAuth_middleare_1.isAuth, ChatController.chatRequestedList);
 route.put('/chat/request/:id', isAuth_middleare_1.isAuth, ChatController.chatRequestAccept);
 route.delete('/chat/request/:id', isAuth_middleare_1.isAuth, ChatController.chatRequestReject);
-/**
- * Chat Related
- */
+//Chat Related******************
 // Remove from Group or One to One Chat or unfriend
 route.delete('/chat/room/:id', isAuth_middleare_1.isAuth, ChatController.chatLeaveRoom);
-/**
- * Friend Related
- */
+//Friend Related*****************
 route.get('/chat/friend', isAuth_middleare_1.isAuth, ChatController.chatFriendsList);
 route.get('/chat/user', isAuth_middleare_1.isAuth, ChatController.chatUserList);
-/**
- * Message Related
- */
+//  Message Related *************/
 route.post('/chat/message', isAuth_middleare_1.isAuth, ChatController.messageSend);
 route.get('/chat/message/:id', isAuth_middleare_1.isAuth, ChatController.messageAll);
 //# sourceMappingURL=chat.route.js.map

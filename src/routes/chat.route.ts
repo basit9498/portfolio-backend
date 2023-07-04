@@ -4,30 +4,31 @@ import { isAuth } from '../middlewares/isAuth.middleare';
 
 const route = express.Router();
 
-/**
- * Chat Request Related
- */
+//Chat Request Related----
+
 route.post('/chat/request', isAuth, ChatController.chatUserRequest);
+/**
+ * @swagger
+ * /chat/request:
+ *  get:
+ *      tags:
+ *          - Request List
+ *      summary: Get request list
+ */
 route.get('/chat/request', isAuth, ChatController.chatRequestedList);
 route.put('/chat/request/:id', isAuth, ChatController.chatRequestAccept);
 route.delete('/chat/request/:id', isAuth, ChatController.chatRequestReject);
 
-/**
- * Chat Related
- */
+//Chat Related******************
 // Remove from Group or One to One Chat or unfriend
 route.delete('/chat/room/:id', isAuth, ChatController.chatLeaveRoom);
 
-/**
- * Friend Related
- */
+//Friend Related*****************
 
 route.get('/chat/friend', isAuth, ChatController.chatFriendsList);
 route.get('/chat/user', isAuth, ChatController.chatUserList);
 
-/**
- * Message Related
- */
+//  Message Related *************/
 route.post('/chat/message', isAuth, ChatController.messageSend);
 route.get('/chat/message/:id', isAuth, ChatController.messageAll);
 

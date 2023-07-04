@@ -35,6 +35,32 @@ const user_validation_1 = require("../validations/user.validation");
 const route = express_1.default.Router();
 exports.authRoute = route;
 //Register
+/**
+ * @swagger
+ * /auth/register:
+ *    post:
+ *      tags:
+ *        - User
+ *      summary: User registration
+ *      requestBody:
+ *          required: true
+ *          content:
+ *            application/json:
+ *                schema:
+ *                   $ref: '#/components/schemas/CreateUserInput'
+ *      responses:
+ *          201:
+ *            description: Success
+ *            content:
+ *                application/json:
+ *                  schema:
+ *                     $ref: '#/components/schemas/CreateUserResponse'
+ *          400:
+ *            description: Bad Request
+ *
+ *
+ *
+ */
 route.post('/auth/register', user_validation_1.authRegisterValidation, validation_middleware_1.validationMiddleware, authController.registerController);
 // Login
 route.post('/auth/login', user_validation_1.authLoginValidation, validation_middleware_1.validationMiddleware, authController.loginController);
