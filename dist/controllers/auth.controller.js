@@ -24,7 +24,7 @@ const registerController = async (req, res, next) => {
         user.verify_account.status = false;
         (0, send_email_1.sendMail)('Abdul Basit', 'anddeveloper.abdulbasit@gmail.com', getVerification_token);
         await user.save();
-        res.json({ message: 'Please verify your Account' });
+        res.status(201).json({ message: 'Please verify your Account' });
     }
     catch (error) {
         next(error);
@@ -65,7 +65,6 @@ const loginController = async (req, res, next) => {
         res.json({ user, token });
     }
     catch (error) {
-        console.log('login:error:', error);
         next(error);
     }
 };

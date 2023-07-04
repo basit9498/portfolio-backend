@@ -13,6 +13,32 @@ import {
 const route = express.Router();
 
 //Register
+/**
+ * @swagger
+ * /auth/register:
+ *    post:
+ *      tags:
+ *        - User
+ *      summary: User registration
+ *      requestBody:
+ *          required: true
+ *          content:
+ *            application/json:
+ *                schema:
+ *                   $ref: '#/components/schemas/CreateUserInput'
+ *      responses:
+ *          201:
+ *            description: Success
+ *            content:
+ *                application/json:
+ *                  schema:
+ *                     $ref: '#/components/schemas/CreateUserResponse'
+ *          400:
+ *            description: Bad Request
+ *
+ *
+ *
+ */
 route.post(
   '/auth/register',
   authRegisterValidation,

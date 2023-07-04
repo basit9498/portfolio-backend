@@ -36,7 +36,7 @@ export const registerController = async (
     );
     await user.save();
 
-    res.json({ message: 'Please verify your Account' });
+    res.status(201).json({ message: 'Please verify your Account' });
   } catch (error) {
     next(error);
   }
@@ -95,7 +95,6 @@ export const loginController = async (
 
     res.json({ user, token });
   } catch (error) {
-    console.log('login:error:', error);
     next(error);
   }
 };

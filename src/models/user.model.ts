@@ -6,6 +6,40 @@ import {
 } from 'interfaces/models/user.model.interface';
 import mongoose, { Schema } from 'mongoose';
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    CreateUserInput:
+ *        type: object
+ *        required:
+ *          - name
+ *          - email
+ *          - password
+ *          - conform_password
+ *        properties:
+ *            name:
+ *              type: string
+ *              default: Example Name
+ *            email:
+ *              type: string
+ *              default: example@test.com
+ *            password:
+ *              type: string
+ *              default: stringPassword@123
+ *            conform_password:
+ *              type: string
+ *              default: stringPassword@123
+ *    CreateUserResponse:
+ *        type: object
+ *        properties:
+ *            name:
+ *              type: string
+ *            email:
+ *              type: string
+ *            id:
+ *              type: string
+ */
 const UserSchema = new Schema<UserDocment, UserModel>(
   {
     name: {

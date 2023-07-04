@@ -121,14 +121,25 @@ const chatRequestReject = async (req, res, next) => {
     }
 };
 exports.chatRequestReject = chatRequestReject;
+/**
+ * Friend Related Portion
+ */
 // users list
 const chatUserList = async (req, res, next) => {
     try {
-        const chatUser = await user_model_1.User.find({ _id: { $ne: req.user.id } });
+        const chatUser = await user_model_1.User.find({
+            _id: { $ne: req.user.id },
+            account_status: true,
+        });
         if (!chatUser.length) {
             return (0, responseSend_1.sendResponse)(res, 200, responseSend_1.MessageStatus.DataNotFounded);
         }
-        (0, responseSend_1.sendResponse)(res, 200, responseSend_1.MessageStatus.Read, chatUser);
+        const chatRoom = await chat_room_model_1.ChatRoomModelDB.find();
+        // Query is not working
+        // requirement is when b
+        const userList = chatUser?.filter((cuf) => !chatRoom.some((crs) => crs.users.some((us) => us.user_id.toString() === cuf._id.toString())));
+        console.log('chatRoom', userList);
+        (0, responseSend_1.sendResponse)(res, 200, responseSend_1.MessageStatus.Read, userList);
     }
     catch (error) {
         console.log('error', error);

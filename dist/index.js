@@ -36,6 +36,7 @@ const portfolio_route_1 = require("./routes/portfolio.route");
 const CustomError_1 = require("./error/CustomError");
 const chat_route_1 = require("./routes/chat.route");
 const cors_1 = __importDefault(require("cors"));
+const swagger_1 = __importDefault(require("./utils/swagger"));
 dotenv.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 5000;
@@ -46,6 +47,8 @@ app.use(body_parser_1.default.json());
 app.use(auth_route_1.authRoute);
 app.use(portfolio_route_1.portfolioRoute);
 app.use(chat_route_1.ChatRoute);
+// swagger
+(0, swagger_1.default)(app, PORT);
 // Error Middleware
 app.use((error, req, res, next) => {
     if (error instanceof CustomError_1.CustomError) {

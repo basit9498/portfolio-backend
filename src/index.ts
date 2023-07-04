@@ -8,6 +8,7 @@ import { portfolioRoute } from './routes/portfolio.route';
 import { CustomError } from './error/CustomError';
 import { ChatRoute } from './routes/chat.route';
 import cors from 'cors';
+import swaggerDoc from './utils/swagger';
 
 dotenv.config();
 
@@ -23,6 +24,8 @@ app.use(authRoute);
 app.use(portfolioRoute);
 app.use(ChatRoute);
 
+// swagger
+swaggerDoc(app, PORT);
 // Error Middleware
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   if (error instanceof CustomError) {
