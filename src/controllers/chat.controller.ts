@@ -79,7 +79,9 @@ export const chatUserRequest = async (
 
     await chat.save();
     sendResponse(res, 201, MessageStatus.Created, chat);
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 };
 
 // Request List
@@ -91,6 +93,9 @@ export const chatRequestedList = async (
   try {
     const chat = await ChatRoomModelDB.find({
       users: { $elemMatch: { user_id: req.user.id, accept_status: false } },
+    }).populate({
+      path: 'users.user_id',
+      select: '_id name email',
     });
 
     if (!chat.length) {
@@ -183,10 +188,9 @@ export const chatUserList = async (
           crs.users.some((us) => us.user_id.toString() === cuf._id.toString())
         )
     );
-    console.log('chatRoom', userList);
+
     sendResponse(res, 200, MessageStatus.Read, userList);
   } catch (error) {
-    console.log('error', error);
     next(error);
   }
 };
@@ -207,7 +211,6 @@ export const chatFriendsList = async (
     }
     sendResponse(res, 200, MessageStatus.Read, chat);
   } catch (error) {
-    console.log('error', error);
     next(error);
   }
 };
@@ -234,7 +237,6 @@ export const messageSend = async (
     }
     sendResponse(res, 201, MessageStatus.MessageSend, chatMessage);
   } catch (error) {
-    console.log('error', error);
     next(error);
   }
 };

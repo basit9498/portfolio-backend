@@ -9,12 +9,18 @@ import { CustomError } from './error/CustomError';
 import { ChatRoute } from './routes/chat.route';
 import cors from 'cors';
 import swaggerDoc from './utils/swagger';
-const path = require('path');
+import http from 'http';
+import { Server } from 'socket.io';
 
 dotenv.config();
-
 const app = express();
 const PORT = process.env.PORT || 5000;
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:3000',
+  },
+});
 
 app.use(cors());
 app.use(cookieParser());
@@ -44,9 +50,33 @@ app.use('*', (req: Request, res: Response, next: NextFunction) => {
   res.status(404).send('Not Found !!!!');
 });
 
+// websocket section *****start******
+io.on('connection', (socket) => {
+  // console.log('server a is connect my', socket.id);
+
+  // socket.on('send_message', (data) => {
+  //   socket.broadcast.emit('received_message', data);
+  // });
+
+  // ---join room ------
+  socket.on('join_room', (data) => {
+    console.log('join data', data);
+    socket.join(data.roomId);
+  });
+
+  // send message to room
+
+  socket.on('send_message', (data) => {
+    console.log(data);
+    socket.to(data?.roomId).emit('received_message', data);
+  });
+});
+// websocket section *****end******
+
 connectToDatabase()
   .then(() => {
-    app.listen(PORT, () => {
+    // app.list
+    server.listen(PORT, () => {
       console.log(`App listening on port http://localhost:${PORT}`);
     });
   })
