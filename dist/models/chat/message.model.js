@@ -25,6 +25,25 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MessageModelDB = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    MessageList:
+ *     type: object
+ *     required:
+ *        - chat_room_id
+ *        - message
+ *     properties:
+ *        chat_room_id:
+ *          type: string
+ *        message:
+ *          type: string
+ *        sender_user_id:
+ *          type: string
+ *
+ *
+ */
 const MessageSchema = new mongoose_1.Schema({
     chat_room_id: {
         type: mongoose_1.Schema.Types.ObjectId,

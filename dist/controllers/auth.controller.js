@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userDetailController = exports.authVerifyAccountController = exports.refreshTokenController = exports.logoutController = exports.loginController = exports.registerController = void 0;
+exports.userAvatarUploading = exports.userDetailController = exports.authVerifyAccountController = exports.refreshTokenController = exports.logoutController = exports.loginController = exports.registerController = void 0;
 const user_model_1 = require("../models/user.model");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
@@ -164,5 +164,32 @@ const userDetailController = async (req, res, next) => {
     }
 };
 exports.userDetailController = userDetailController;
-//
+//User Avatar
+const userAvatarUploading = async (req, res, next) => {
+    try {
+        const image = req.file;
+        if (!req.file) {
+            throw new bad_request_1.BadRequest('Avatar field is missing !!!');
+        }
+        if (image?.fieldname !== 'avatar') {
+            throw new bad_request_1.BadRequest('Avatar field is missing !!!');
+        }
+        const baseUrl = `http://${req.headers.host}/upload/`;
+        const user = await user_model_1.User.updateOne({ _id: req.user.id }, {
+            $set: { avatar: baseUrl + image.filename },
+        });
+        if (user.modifiedCount === 0) {
+            return res.status(200).json({
+                message: 'Avatar is not updated please try again !!!',
+            });
+        }
+        res.status(200).json({
+            message: 'Updated',
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+};
+exports.userAvatarUploading = userAvatarUploading;
 //# sourceMappingURL=auth.controller.js.map

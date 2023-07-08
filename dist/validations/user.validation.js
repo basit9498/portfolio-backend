@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authLogoutValidation = exports.authLoginValidation = exports.authRegisterValidation = void 0;
+exports.authUserUploadAvatarValidation = exports.authLogoutValidation = exports.authLoginValidation = exports.authRegisterValidation = void 0;
 const express_validator_1 = require("express-validator");
 const user_model_1 = require("../models/user.model");
 const all_validation_data_1 = require("./all-validation-data");
@@ -51,5 +51,12 @@ exports.authLogoutValidation = (0, express_validator_1.checkSchema)({
             errorMessage: 'Please provide Valid Id',
         },
     },
+});
+exports.authUserUploadAvatarValidation = (0, express_validator_1.checkSchema)({
+    ...(0, all_validation_data_1.getValidationParameters)([
+        {
+            type: 'avatar',
+        },
+    ], all_validation_data_1.validationParameters),
 });
 //# sourceMappingURL=user.validation.js.map

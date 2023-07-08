@@ -21,6 +21,7 @@ export interface UserDocment extends Document {
     token?: string;
   };
   login_status: { token: string }[];
+  avatar?: string;
   // Add methods in future if need for apply a specfic user
 }
 

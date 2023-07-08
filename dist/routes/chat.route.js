@@ -45,13 +45,32 @@ route.post('/chat/request', isAuth_middleare_1.isAuth, ChatController.chatUserRe
 route.get('/chat/request', isAuth_middleare_1.isAuth, ChatController.chatRequestedList);
 route.put('/chat/request/:id', isAuth_middleare_1.isAuth, ChatController.chatRequestAccept);
 route.delete('/chat/request/:id', isAuth_middleare_1.isAuth, ChatController.chatRequestReject);
-//Chat Related******************
-// Remove from Group or One to One Chat or unfriend
 route.delete('/chat/room/:id', isAuth_middleare_1.isAuth, ChatController.chatLeaveRoom);
-//Friend Related*****************
 route.get('/chat/friend', isAuth_middleare_1.isAuth, ChatController.chatFriendsList);
 route.get('/chat/user', isAuth_middleare_1.isAuth, ChatController.chatUserList);
-//  Message Related *************/
 route.post('/chat/message', isAuth_middleare_1.isAuth, ChatController.messageSend);
+/**
+ * @swagger
+ * '/chat/message/{id}':
+ *  get:
+ *    tags:
+ *        - Message
+ *    summary: Get Messages
+ *    parameters:
+ *              - name: id
+ *                in: path
+ *                description: The id of chat room
+ *                required: true
+ *    responses:
+ *      200:
+ *       description: Success
+ *       content:
+ *          application/json:
+ *              schema:
+ *                  $ref: '#/components/schemas/MessageList'
+ *      400:
+ *        description: No Message List
+ *
+ */
 route.get('/chat/message/:id', isAuth_middleare_1.isAuth, ChatController.messageAll);
 //# sourceMappingURL=chat.route.js.map
