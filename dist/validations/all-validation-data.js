@@ -197,16 +197,19 @@ exports.validationParameters = {
             errorMessage: 'Invalid Id!!!',
         },
     },
-};
-const a = (0, express_validator_1.checkSchema)({
-    id: {
-        in: ['params'],
+    avatar: {
+        in: ['body'],
         notEmpty: {
-            errorMessage: 'Id is not founded in requested api!!!',
+            errorMessage: 'Avatar is  required!!!',
             bail: true,
         },
-        isMongoId: {
-            errorMessage: 'Invalid Id!!!',
+    },
+};
+const a = (0, express_validator_1.checkSchema)({
+    avatar: {
+        notEmpty: {
+            errorMessage: 'Avatar is  required!!!',
+            bail: true,
         },
     },
 });

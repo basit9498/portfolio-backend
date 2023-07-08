@@ -81,6 +81,9 @@ const UserSchema = new Schema<UserDocment, UserModel>(
       required: true,
       default: 'User',
     },
+    avatar: {
+      type: String,
+    },
   },
   {
     toJSON: {

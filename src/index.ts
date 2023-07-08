@@ -9,6 +9,7 @@ import { CustomError } from './error/CustomError';
 import { ChatRoute } from './routes/chat.route';
 import cors from 'cors';
 import swaggerDoc from './utils/swagger';
+const path = require('path');
 
 dotenv.config();
 
@@ -17,9 +18,11 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(cookieParser());
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.use('/upload', express.static('upload'));
 app.use(authRoute);
 app.use(portfolioRoute);
 app.use(ChatRoute);

@@ -61,3 +61,14 @@ export const authLogoutValidation = checkSchema({
     },
   },
 });
+
+export const authUserUploadAvatarValidation = checkSchema({
+  ...getValidationParameters(
+    [
+      {
+        type: 'avatar',
+      },
+    ],
+    validationParameters
+  ),
+});

@@ -203,17 +203,20 @@ export const validationParameters = {
       errorMessage: 'Invalid Id!!!',
     },
   },
+  avatar: {
+    in: ['body'],
+    notEmpty: {
+      errorMessage: 'Avatar is  required!!!',
+      bail: true,
+    },
+  },
 };
 
 const a = checkSchema({
-  id: {
-    in: ['params'],
+  avatar: {
     notEmpty: {
-      errorMessage: 'Id is not founded in requested api!!!',
+      errorMessage: 'Avatar is  required!!!',
       bail: true,
-    },
-    isMongoId: {
-      errorMessage: 'Invalid Id!!!',
     },
   },
 });

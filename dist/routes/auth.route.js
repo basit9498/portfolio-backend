@@ -32,6 +32,7 @@ const express_1 = __importDefault(require("express"));
 const isAuth_middleare_1 = require("../middlewares/isAuth.middleare");
 const validation_middleware_1 = require("../middlewares/validation.middleware");
 const user_validation_1 = require("../validations/user.validation");
+const imageUpload_1 = require("../utils/imageUpload");
 const route = express_1.default.Router();
 exports.authRoute = route;
 //Register
@@ -70,7 +71,8 @@ route.get('/auth/logout', isAuth_middleare_1.isAuth,
 // validationMiddleware,
 authController.logoutController);
 route.post('/auth/refresh-token', authController.refreshTokenController);
-// Verfiy Account
+// Verify Account
 route.get('/auth/verify', authController.authVerifyAccountController);
 route.get('/auth/me', isAuth_middleare_1.isAuth, authController.userDetailController);
+route.put('/auth/user-avatar', isAuth_middleare_1.isAuth, imageUpload_1.uploadSingleImage.single('avatar'), authController.userAvatarUploading);
 //# sourceMappingURL=auth.route.js.map

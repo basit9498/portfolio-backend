@@ -8,7 +8,9 @@ import {
   authLoginValidation,
   authLogoutValidation,
   authRegisterValidation,
+  authUserUploadAvatarValidation,
 } from '../validations/user.validation';
+import { uploadSingleImage } from '../utils/imageUpload';
 
 const route = express.Router();
 
@@ -65,9 +67,16 @@ route.get(
 
 route.post('/auth/refresh-token', authController.refreshTokenController);
 
-// Verfiy Account
+// Verify Account
 route.get('/auth/verify', authController.authVerifyAccountController);
 
 route.get('/auth/me', isAuth, authController.userDetailController);
+
+route.put(
+  '/auth/user-avatar',
+  isAuth,
+  uploadSingleImage.single('avatar'),
+  authController.userAvatarUploading
+);
 
 export { route as authRoute };

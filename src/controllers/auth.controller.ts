@@ -229,4 +229,40 @@ export const userDetailController = async (
   }
 };
 
-//
+//User Avatar
+export const userAvatarUploading = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const image = req.file;
+    if (!req.file) {
+      throw new BadRequest('Avatar field is missing !!!');
+    }
+    if (image?.fieldname !== 'avatar') {
+      throw new BadRequest('Avatar field is missing !!!');
+    }
+
+    const baseUrl = `http://${req.headers.host}/upload/`;
+
+    const user = await User.updateOne(
+      { _id: req.user.id },
+      {
+        $set: { avatar: baseUrl + image.filename },
+      }
+    );
+
+    if (user.modifiedCount === 0) {
+      return res.status(200).json({
+        message: 'Avatar is not updated please try again !!!',
+      });
+    }
+
+    res.status(200).json({
+      message: 'Updated',
+    });
+  } catch (error) {
+    next(error);
+  }
+};

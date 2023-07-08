@@ -100,6 +100,9 @@ const UserSchema = new mongoose_1.Schema({
         required: true,
         default: 'User',
     },
+    avatar: {
+        type: String,
+    },
 }, {
     toJSON: {
         transform: function (doc, ret) {
