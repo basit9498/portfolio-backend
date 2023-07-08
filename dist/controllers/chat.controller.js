@@ -65,7 +65,9 @@ const chatUserRequest = async (req, res, next) => {
         await chat.save();
         (0, responseSend_1.sendResponse)(res, 201, responseSend_1.MessageStatus.Created, chat);
     }
-    catch (error) { }
+    catch (error) {
+        next(error);
+    }
 };
 exports.chatUserRequest = chatUserRequest;
 // Request List
@@ -73,6 +75,9 @@ const chatRequestedList = async (req, res, next) => {
     try {
         const chat = await chat_room_model_1.ChatRoomModelDB.find({
             users: { $elemMatch: { user_id: req.user.id, accept_status: false } },
+        }).populate({
+            path: 'users.user_id',
+            select: '_id name email',
         });
         if (!chat.length) {
             return (0, responseSend_1.sendResponse)(res, 200, responseSend_1.MessageStatus.RequestNotFound);
@@ -138,11 +143,9 @@ const chatUserList = async (req, res, next) => {
         // Query is not working
         // requirement is when b
         const userList = chatUser?.filter((cuf) => !chatRoom.some((crs) => crs.users.some((us) => us.user_id.toString() === cuf._id.toString())));
-        console.log('chatRoom', userList);
         (0, responseSend_1.sendResponse)(res, 200, responseSend_1.MessageStatus.Read, userList);
     }
     catch (error) {
-        console.log('error', error);
         next(error);
     }
 };
@@ -161,7 +164,6 @@ const chatFriendsList = async (req, res, next) => {
         (0, responseSend_1.sendResponse)(res, 200, responseSend_1.MessageStatus.Read, chat);
     }
     catch (error) {
-        console.log('error', error);
         next(error);
     }
 };
@@ -185,7 +187,6 @@ const messageSend = async (req, res, next) => {
         (0, responseSend_1.sendResponse)(res, 201, responseSend_1.MessageStatus.MessageSend, chatMessage);
     }
     catch (error) {
-        console.log('error', error);
         next(error);
     }
 };
