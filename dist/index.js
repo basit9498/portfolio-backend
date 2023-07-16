@@ -38,16 +38,18 @@ const chat_route_1 = require("./routes/chat.route");
 const cors_1 = __importDefault(require("cors"));
 const swagger_1 = __importDefault(require("./utils/swagger"));
 const http_1 = __importDefault(require("http"));
-const socket_io_1 = require("socket.io");
+const connection_1 = require("./socket/connection");
+// import { Server } from 'socket.io';
 dotenv.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 5000;
 const server = http_1.default.createServer(app);
-const io = new socket_io_1.Server(server, {
-    cors: {
-        origin: 'http://localhost:3000',
-    },
-});
+// const io = new Server(server, {
+//   cors: {
+//     origin: 'http://localhost:3000',
+//   },
+// });
+const io = (0, connection_1.socketConnection)(server);
 app.use((0, cors_1.default)());
 app.use((0, cookie_parser_1.default)());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
@@ -72,26 +74,47 @@ app.use('*', (req, res, next) => {
     res.status(404).send('Not Found !!!!');
 });
 // websocket section *****start******
-io.on('connection', (socket) => {
-    // console.log('server a is connect my', socket.id);
-    // socket.on('send_message', (data) => {
-    //   socket.broadcast.emit('received_message', data);
-    // });
-    // ---join room ------
-    socket.on('join_room', (data) => {
-        console.log('join data', data);
-        socket.join(data.roomId);
-    });
-    // send message to room
-    socket.on('send_message', (data) => {
-        console.log(data);
-        socket.to(data?.roomId).emit('received_message', data);
-    });
-});
+// io.on('connection', (socket) => {
+//   // console.log('server a is connect my', socket.id);
+//   // socket.on('send_message', (data) => {
+//   //   socket.broadcast.emit('received_message', data);
+//   // });
+//   // ---join room ------
+//   socket.on('join_room', (data) => {
+//     console.log('join data', data);
+//     socket.join(data.roomId);
+//   });
+//   // send message to room
+//   socket.on('send_message', (data) => {
+//     console.log(data);
+//     socket.to(data?.roomId).emit('received_message', data);
+//   });
+// });
 // websocket section *****end******
 (0, db_config_1.default)()
     .then(() => {
     // app.list
+    io.on('connection', (socket) => {
+        console.log('client connection', socket.id);
+        // create new ChatRoom for chat
+        socket.on('join_chat_room', (data) => {
+            console.log('join_chat_room trigger', data);
+            socket.join(data?.chat_room_id);
+        });
+        // share chat
+        socket.on('message_send', (data) => {
+            // console.log('room', socket.rooms);
+            console.log('message_send', data?.data.chat_room_id);
+            socket
+                .to(data?.data.chat_room_id)
+                .emit('message_received', { data: { ...data?.data } });
+        });
+        // get All Rooms detail
+        // const rooms = io.sockets.adapter.rooms;
+        // console.log('room connected ', rooms);
+        // const room = rooms.get('64b225409ca1551aff35d9e0');
+        // console.log('get Room ', room);
+    });
     server.listen(PORT, () => {
         console.log(`App listening on port http://localhost:${PORT}`);
     });
