@@ -32,15 +32,53 @@ const ChatController = __importStar(require("../controllers/chat.controller"));
 const isAuth_middleare_1 = require("../middlewares/isAuth.middleare");
 const route = express_1.default.Router();
 exports.ChatRoute = route;
-//Chat Request Related----
-route.post('/chat/request', isAuth_middleare_1.isAuth, ChatController.chatUserRequest);
+/**
+ * @swagger
+ * tags:
+ *  name: Chat
+ *  description: API for chat
+ */
 /**
  * @swagger
  * /chat/request:
+ *   post:
+ *     tags: [Chat]
+ *     summary: Send request to any user for chat
+ *     requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: "#/components/schemas/ChatSendRequest"
+ *     responses:
+ *          201:
+ *              description: Request send successfully
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: "#/components/schemas/ChatResponseData"
+ *          400:
+ *              description: Invalid Authorization !!!
+ *
+ *
+ */
+route.post('/chat/request', isAuth_middleare_1.isAuth, ChatController.chatUserRequest);
+/**
+ * @swagger
+ * '/chat/message/':
  *  get:
- *      tags:
- *          - Request List
- *      summary: Get request list
+ *    tags: [Chat]
+ *    summary: Get all requests
+ *    responses:
+ *      200:
+ *       description: Success
+ *       content:
+ *          application/json:
+ *              schema:
+ *                  $ref: '#/components/schemas/MessageList'
+ *      400:
+ *        description: No Message List
+ *
  */
 route.get('/chat/request', isAuth_middleare_1.isAuth, ChatController.chatRequestedList);
 route.put('/chat/request/:id', isAuth_middleare_1.isAuth, ChatController.chatRequestAccept);
@@ -53,8 +91,7 @@ route.post('/chat/message', isAuth_middleare_1.isAuth, ChatController.messageSen
  * @swagger
  * '/chat/message/{id}':
  *  get:
- *    tags:
- *        - Message
+ *    tags: [Chat]
  *    summary: Get Messages
  *    parameters:
  *              - name: id

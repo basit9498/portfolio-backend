@@ -1,0 +1,85 @@
+# swagger: "2.0"
+# info:
+#   title: Sample API
+#   version: 1.0.0
+# paths:
+#   /chat/request:
+#     get:
+#       tags:
+#         - Request List
+#       summary: Get request list
+#       responses:
+#         200:
+#           description: OK
+#     post:
+#       tags:
+#         - Request List
+#       summary: Create a request
+#       parameters:
+#         - name: request
+#           in: body
+#           description: Request object
+#           required: true
+#           schema:
+#             $ref: "#/definitions/Request"
+#       responses:
+#         201:
+#           description: Created
+
+#   /chat/request/{id}:
+#     get:
+#       tags:
+#         - Request List
+#       summary: Get request by ID
+#       parameters:
+#         - name: id
+#           in: path
+#           description: Request ID
+#           required: true
+#           type: string
+#       responses:
+#         200:
+#           description: OK
+#     put:
+#       tags:
+#         - Request List
+#       summary: Update a request by ID
+#       parameters:
+#         - name: id
+#           in: path
+#           description: Request ID
+#           required: true
+#           type: string
+#         - name: request
+#           in: body
+#           description: Request object
+#           required: true
+#           schema:
+#             $ref: "#/definitions/Request"
+#       responses:
+#         200:
+#           description: OK
+#     delete:
+#       tags:
+#         - Request List
+#       summary: Delete a request by ID
+#       parameters:
+#         - name: id
+#           in: path
+#           description: Request ID
+#           required: true
+#           type: string
+#       responses:
+#         204:
+#           description: No Content
+
+# definitions:
+#   Request:
+#     type: object
+#     properties:
+#       id:
+#         type: string
+#       name:
+#         type: string
+#       description:
+#         type: string

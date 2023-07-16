@@ -179,7 +179,9 @@ export const chatUserList = async (
       return sendResponse(res, 200, MessageStatus.DataNotFounded);
     }
 
-    const chatRoom = await ChatRoomModelDB.find();
+    const chatRoom = await ChatRoomModelDB.find({
+      'users.user_id': req.user.id,
+    });
     // Query is not working
     // requirement is when b
     const userList = chatUser?.filter(
@@ -205,6 +207,9 @@ export const chatFriendsList = async (
       'users.user_id': req.user.id,
       'users.accept_status': { $ne: false },
       is_group: false,
+    }).populate({
+      path: 'users.user_id',
+      select: '_id name email',
     });
     if (!chat.length) {
       return sendResponse(res, 200, MessageStatus.DataNotFounded);

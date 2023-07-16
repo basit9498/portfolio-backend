@@ -25,6 +25,56 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChatRoomModelDB = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    ChatSendRequest:
+ *      type: object
+ *      required:
+ *        - requested_user_id
+ *      properties:
+ *          requested_user_id:
+ *              type: string
+ *              default: null
+ *    ChatResponseData:
+ *        type: object
+ *        properties:
+ *            chat_room:
+ *                type: string
+ *                enum: ['ONE-TO-ONE', 'GROUP']
+ *            users:
+ *                type: array
+ *                items:
+ *                  $ref: "#/components/schemas/UserChatInfo"
+ *            is_group:
+ *                type: boolean
+ *            group_admin_users:
+ *                type: array
+ *                items:
+ *                  $ref: "#/components/schemas/User"
+ *
+ *    UserChatInfo:
+ *        type: object
+ *        properties:
+ *            user_id:
+ *                type: string
+ *                format: uuid
+ *            accept_status:
+ *                type: boolean
+ *        required:
+ *            - user_id:
+ *            - accept_status:
+ *    User:
+ *        type: object
+ *        properties:
+ *            id:
+ *                type: string
+ *                format: uuid
+ *        required:
+ *            - id:
+ *
+ */
 const ChatRoomSchema = new mongoose_1.Schema({
     chat_room: {
         type: String,

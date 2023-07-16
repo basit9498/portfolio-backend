@@ -4,16 +4,55 @@ import { isAuth } from '../middlewares/isAuth.middleare';
 
 const route = express.Router();
 
-//Chat Request Related----
+/**
+ * @swagger
+ * tags:
+ *  name: Chat
+ *  description: API for chat
+ */
+
+/**
+ * @swagger
+ * /chat/request:
+ *   post:
+ *     tags: [Chat]
+ *     summary: Send request to any user for chat
+ *     requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: "#/components/schemas/ChatSendRequest"
+ *     responses:
+ *          201:
+ *              description: Request send successfully
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: "#/components/schemas/ChatResponseData"
+ *          400:
+ *              description: Invalid Authorization !!!
+ *
+ *
+ */
 
 route.post('/chat/request', isAuth, ChatController.chatUserRequest);
 /**
  * @swagger
- * /chat/request:
+ * '/chat/message/':
  *  get:
- *      tags:
- *          - Request List
- *      summary: Get request list
+ *    tags: [Chat]
+ *    summary: Get all requests
+ *    responses:
+ *      200:
+ *       description: Success
+ *       content:
+ *          application/json:
+ *              schema:
+ *                  $ref: '#/components/schemas/MessageList'
+ *      400:
+ *        description: No Message List
+ *
  */
 route.get('/chat/request', isAuth, ChatController.chatRequestedList);
 
@@ -31,8 +70,7 @@ route.post('/chat/message', isAuth, ChatController.messageSend);
  * @swagger
  * '/chat/message/{id}':
  *  get:
- *    tags:
- *        - Message
+ *    tags: [Chat]
  *    summary: Get Messages
  *    parameters:
  *              - name: id
