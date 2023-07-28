@@ -10,6 +10,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const send_email_1 = require("../helpers/send-email");
 const bad_request_1 = require("../error/bad-request");
 const forbidden_error_1 = require("../error/forbidden-error");
+const user_model_interface_1 = require("../interfaces/models/user.model.interface");
 const registerController = async (req, res, next) => {
     try {
         // Data Saving
@@ -56,6 +57,7 @@ const loginController = async (req, res, next) => {
         const refresh_token = jsonwebtoken_1.default.sign({ id: user.id }, process.env.AUTH_REFRESH_TOKEN, { expiresIn: process.env.AUTH_REFRESH_TOKEN_TIME });
         // save token in
         user.login_status.push({ token: refresh_token });
+        user.active_status = user_model_interface_1.ActiveStatus.ONLINE;
         await user.save();
         // token set in cookies
         res.cookie('refresh_token', refresh_token, {

@@ -1,5 +1,6 @@
 import { ecryptPassword } from '../helpers/encryptPassword';
 import {
+  ActiveStatus,
   UserAttrs,
   UserDocment,
   UserModel,
@@ -64,6 +65,12 @@ const UserSchema = new Schema<UserDocment, UserModel>(
         type: String,
       },
     },
+    active_status: {
+      type: String,
+      required: true,
+      enum: ['ONLINE', 'OFFLINE'],
+      default: 'OFFLINE',
+    },
     account_status: {
       type: Boolean,
       required: true,
@@ -121,6 +128,23 @@ UserSchema.pre('save', async function (next) {
 
 UserSchema.statics.build = (userAttrs: UserAttrs) => {
   return new User(userAttrs);
+};
+
+UserSchema.statics.updateActiveStatus = async (
+  id: string,
+  status: ActiveStatus
+) => {
+  const userStatus = await User.updateOne(
+    { _id: id },
+    {
+      $set: { active_status: status },
+    }
+  );
+
+  if (userStatus.modifiedCount === 0) {
+    return false;
+  }
+  return true;
 };
 
 /**

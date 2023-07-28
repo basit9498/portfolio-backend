@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt';
 import { sendMail } from '../helpers/send-email';
 import { BadRequest } from '../error/bad-request';
 import { ForbiddenError } from '../error/forbidden-error';
+import { ActiveStatus } from '../interfaces/models/user.model.interface';
 
 export const registerController = async (
   req: Request,
@@ -85,6 +86,7 @@ export const loginController = async (
 
     // save token in
     user.login_status.push({ token: refresh_token });
+    user.active_status = ActiveStatus.ONLINE;
     await user.save();
 
     // token set in cookies

@@ -161,7 +161,7 @@ const chatFriendsList = async (req, res, next) => {
             is_group: false,
         }).populate({
             path: 'users.user_id',
-            select: '_id name email',
+            select: '_id name email active_status',
         });
         if (!chat.length) {
             return (0, responseSend_1.sendResponse)(res, 200, responseSend_1.MessageStatus.DataNotFounded);

@@ -209,7 +209,7 @@ export const chatFriendsList = async (
       is_group: false,
     }).populate({
       path: 'users.user_id',
-      select: '_id name email',
+      select: '_id name email active_status',
     });
     if (!chat.length) {
       return sendResponse(res, 200, MessageStatus.DataNotFounded);
