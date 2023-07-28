@@ -1,5 +1,9 @@
 import { Document, Model } from 'mongoose';
 
+export enum ActiveStatus {
+  ONLINE = 'ONLINE',
+  OFFLINE = 'OFFLINE',
+}
 // These are user Attributes
 export interface UserAttrs {
   name: string;
@@ -22,10 +26,12 @@ export interface UserDocment extends Document {
   };
   login_status: { token: string }[];
   avatar?: string;
-  // Add methods in future if need for apply a specfic user
+  active_status?: ActiveStatus;
+  // Add methods in future if need for apply a specific user
 }
 
 export interface UserModel extends Model<UserDocment> {
   build(userAttrs: UserAttrs): UserDocment;
+  updateActiveStatus(id: string, status: ActiveStatus): boolean;
   // Add methods in future if need for apply to whole user
 }

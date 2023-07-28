@@ -39,6 +39,8 @@ const cors_1 = __importDefault(require("cors"));
 const swagger_1 = __importDefault(require("./utils/swagger"));
 const http_1 = __importDefault(require("http"));
 const connection_1 = require("./socket/connection");
+const user_model_1 = require("./models/user.model");
+const user_model_interface_1 = require("./interfaces/models/user.model.interface");
 // import { Server } from 'socket.io';
 dotenv.config();
 const app = (0, express_1.default)();
@@ -96,10 +98,26 @@ app.use('*', (req, res, next) => {
     // app.list
     io.on('connection', (socket) => {
         console.log('client connection', socket.id);
+        //user online status
+        socket.on('user_online', async (data) => {
+            console.log('user_online', data);
+            if (data?.userId) {
+                await user_model_1.User.updateActiveStatus(data?.userId, user_model_interface_1.ActiveStatus.ONLINE);
+            }
+            socket.broadcast.emit('user_active_status', {
+                userId: data?.userId,
+                active: user_model_interface_1.ActiveStatus.ONLINE,
+            });
+        });
         // create new ChatRoom for chat
         socket.on('join_chat_room', (data) => {
-            console.log('join_chat_room trigger', data);
             socket.join(data?.chat_room_id);
+            console.log('client handshake');
+        });
+        // Leave Room
+        socket.on('leave_room', (data) => {
+            console.log('leave_room', data);
+            socket.leave(data?.data);
         });
         // share chat
         socket.on('message_send', (data) => {
@@ -108,6 +126,21 @@ app.use('*', (req, res, next) => {
             socket
                 .to(data?.data.chat_room_id)
                 .emit('message_received', { data: { ...data?.data } });
+        });
+        // Disconnect
+        socket.on('disconnect', async (reason) => {
+            console.log('reason disconnect:', reason);
+            console.log('reason disconnect:', socket.handshake.query?.userId);
+            // update user active user status
+            const userId = socket.handshake.query?.userId;
+            socket.broadcast.emit('user_active_status', {
+                userId: userId,
+                active: user_model_interface_1.ActiveStatus.OFFLINE,
+            });
+            console.log('useId disconnect query', userId);
+            if (userId) {
+                await user_model_1.User.updateActiveStatus(userId, user_model_interface_1.ActiveStatus.OFFLINE);
+            }
         });
         // get All Rooms detail
         // const rooms = io.sockets.adapter.rooms;

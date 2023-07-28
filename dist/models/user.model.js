@@ -83,6 +83,12 @@ const UserSchema = new mongoose_1.Schema({
             type: String,
         },
     },
+    active_status: {
+        type: String,
+        required: true,
+        enum: ['ONLINE', 'OFFLINE'],
+        default: 'OFFLINE',
+    },
     account_status: {
         type: Boolean,
         required: true,
@@ -134,6 +140,15 @@ UserSchema.pre('save', async function (next) {
 });
 UserSchema.statics.build = (userAttrs) => {
     return new exports.User(userAttrs);
+};
+UserSchema.statics.updateActiveStatus = async (id, status) => {
+    const userStatus = await exports.User.updateOne({ _id: id }, {
+        $set: { active_status: status },
+    });
+    if (userStatus.modifiedCount === 0) {
+        return false;
+    }
+    return true;
 };
 /**
  * User Documents Methods

@@ -11,6 +11,8 @@ import cors from 'cors';
 import swaggerDoc from './utils/swagger';
 import http from 'http';
 import { socketConnection } from './socket/connection';
+import { User } from './models/user.model';
+import { ActiveStatus } from './interfaces/models/user.model.interface';
 // import { Server } from 'socket.io';
 
 dotenv.config();
@@ -81,10 +83,31 @@ connectToDatabase()
     io.on('connection', (socket) => {
       console.log('client connection', socket.id);
 
+      //user online status
+      socket.on('user_online', async (data) => {
+        console.log('user_online', data);
+        if (data?.userId) {
+          await User.updateActiveStatus(
+            data?.userId as string,
+            ActiveStatus.ONLINE
+          );
+        }
+        socket.broadcast.emit('user_active_status', {
+          userId: data?.userId,
+          active: ActiveStatus.ONLINE,
+        });
+      });
+
       // create new ChatRoom for chat
       socket.on('join_chat_room', (data) => {
-        console.log('join_chat_room trigger', data);
         socket.join(data?.chat_room_id);
+        console.log('client handshake');
+      });
+
+      // Leave Room
+      socket.on('leave_room', (data) => {
+        console.log('leave_room', data);
+        socket.leave(data?.data);
       });
 
       // share chat
@@ -95,6 +118,22 @@ connectToDatabase()
         socket
           .to(data?.data.chat_room_id)
           .emit('message_received', { data: { ...data?.data } });
+      });
+
+      // Disconnect
+      socket.on('disconnect', async (reason) => {
+        console.log('reason disconnect:', reason);
+        console.log('reason disconnect:', socket.handshake.query?.userId);
+        // update user active user status
+        const userId = socket.handshake.query?.userId;
+        socket.broadcast.emit('user_active_status', {
+          userId: userId,
+          active: ActiveStatus.OFFLINE,
+        });
+        console.log('useId disconnect query', userId);
+        if (userId) {
+          await User.updateActiveStatus(userId as string, ActiveStatus.OFFLINE);
+        }
       });
 
       // get All Rooms detail
