@@ -7,7 +7,8 @@ const socketConnection = (httpServer) => {
     socketIo = new socket_io_1.Server(httpServer, {
         cors: {
             origin: 'http://localhost:3000',
-            methods: ['GET', 'POST'], // Allow these HTTP methods
+            methods: ['GET', 'POST'],
+            credentials: true,
         },
     });
     return socketIo;
