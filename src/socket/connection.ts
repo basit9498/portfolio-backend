@@ -3,14 +3,12 @@ import http from 'http';
 
 let socketIo: Server | null = null;
 export const socketConnection = (httpServer: http.Server) => {
-  socketIo = new Server(
-    httpServer
-    //   {
-    //   cors: {
-    //     origin: ['http://localhost:3000'],
-    //   },
-    // }
-  );
+  socketIo = new Server(httpServer, {
+    cors: {
+      origin: 'http://localhost:3000', // Allow requests from this origin
+      methods: ['GET', 'POST'], // Allow these HTTP methods
+    },
+  });
 
   return socketIo;
 };
