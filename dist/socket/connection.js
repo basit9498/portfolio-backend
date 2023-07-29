@@ -4,13 +4,12 @@ exports.getIO = exports.socketConnection = void 0;
 const socket_io_1 = require("socket.io");
 let socketIo = null;
 const socketConnection = (httpServer) => {
-    socketIo = new socket_io_1.Server(httpServer
-    //   {
-    //   cors: {
-    //     origin: ['http://localhost:3000'],
-    //   },
-    // }
-    );
+    socketIo = new socket_io_1.Server(httpServer, {
+        cors: {
+            origin: 'http://localhost:3000',
+            methods: ['GET', 'POST'], // Allow these HTTP methods
+        },
+    });
     return socketIo;
 };
 exports.socketConnection = socketConnection;
