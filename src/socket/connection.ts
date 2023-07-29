@@ -7,6 +7,7 @@ export const socketConnection = (httpServer: http.Server) => {
     cors: {
       origin: 'http://localhost:3000', // Allow requests from this origin
       methods: ['GET', 'POST'], // Allow these HTTP methods
+      credentials: true,
     },
   });
 
