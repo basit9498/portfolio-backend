@@ -6,7 +6,10 @@ let socketIo = null;
 const socketConnection = (httpServer) => {
     socketIo = new socket_io_1.Server(httpServer, {
         cors: {
-            origin: 'http://localhost:3000',
+            origin: [
+                'http://localhost:3000',
+                'https://portfolio-api-test-v1.vercel.app',
+            ],
         },
     });
     return socketIo;
